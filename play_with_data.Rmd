@@ -3,8 +3,13 @@ title: "COVID-19 Data"
 output: github_document
 ---
 
+
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+# get latest data
+remotes::install_github("kjhealy/covdata")
+
 library(tidyverse)
 library(hubbeR)
 library(covdata)
@@ -18,6 +23,8 @@ library(prismatic)
 }
 
 ca_county_pops <- read_csv("ca_county_pops.csv") %>% 
+  mutate(county = str_replace(County, " County", ""))
+il_county_pops <- read_csv("il_county_pops.csv") %>% 
   mutate(county = str_replace(County, " County", ""))
 
 top_n_counties <- function(data, n = 5) {
@@ -78,6 +85,18 @@ ca_counties %>%
        y = "Cases Per 1,000 Population")
 ggsave("img/ca_counties_per_capita.png", width = 8, height = 6, dpi = 300)
 ```
+
+```{r}
+ca_counties <- nytcovcounty %>% 
+  filter(state == "California") %>% 
+  group_by(county) %>% 
+  arrange(date) %>% 
+  mutate(new_cases = coalesce(cases - lag(cases),1))
+ca_counties
+```
+
+
+
 
 ```{r}
 ca_counties %>% 
@@ -143,6 +162,36 @@ ny_counties %>%
        x = "Days Since First Case",
        y = "Cumulative Cases")
 ```
+
+
+## Illinois
+
+
+```{r}
+il_counties <- nytcovcounty %>% 
+  filter(state == "Illinois")
+il_counties %>% 
+  group_by(county) %>% 
+  mutate(days_since = date - min(date),
+         core = if_else(county %nin% top_n_counties(ny_counties, n=7), "", county),
+         end_label = if_else(date == max(date), core, NA_character_)) %>% 
+  ungroup() %>% 
+  left_join(il_county_pops, by = "county") %>% 
+  mutate(cases_per_capita = 1000 * cases / Population) %>% 
+  ggplot(aes(x = date, y = cases_per_capita, group = county, label = end_label, color = core)) +
+  geom_line() +
+  geom_text_repel(segment.color = NA, nudge_x = 2, nudge_y = 0.1) +
+  #scale_y_log10() +
+  #scale_x_continuous(limits = c(0,100)) +
+  scale_color_manual(values = ghColorSelect("grey-400", "blue", "red", "green", "yellow-800", "purple", "orange", "pink")) +
+  guides(color = FALSE) +
+  labs(title = "Cumulative Cases of Coronavirus in Illinois Counties",
+       x = "Days Since First Case",
+       y = "Cases Per 1,000")
+ggsave("img/il_counties_per_capita.png", width = 8, height = 6, dpi = 300)
+```
+
+
 
 ```{r}
 apple_mobility %>% 
