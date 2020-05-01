@@ -178,7 +178,7 @@ il_counties %>%
   ungroup() %>% 
   left_join(il_county_pops, by = "county") %>% 
   mutate(cases_per_capita = 1000 * cases / Population) %>% 
-  ggplot(aes(x = date, y = cases_per_capita, group = county, label = end_label, color = core)) +
+  ggplot(aes(x = days_since, y = cases_per_capita, group = county, label = end_label, color = core)) +
   geom_line() +
   geom_text_repel(segment.color = NA, nudge_x = 2, nudge_y = 0.1) +
   #scale_y_log10() +
