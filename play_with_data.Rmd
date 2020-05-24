@@ -26,6 +26,7 @@ ca_county_pops <- read_csv("ca_county_pops.csv") %>%
   mutate(county = str_replace(County, " County", ""))
 il_county_pops <- read_csv("il_county_pops.csv") %>% 
   mutate(county = str_replace(County, " County", ""))
+state_pops <- read_csv("state_populations.csv")
 
 top_n_counties <- function(data, n = 5) {
   data %>%
@@ -173,7 +174,7 @@ il_counties <- nytcovcounty %>%
 il_counties %>% 
   group_by(county) %>% 
   mutate(days_since = date - min(date),
-         core = if_else(county %nin% top_n_counties(ny_counties, n=7), "", county),
+         core = if_else(county %nin% top_n_counties(il_counties, n=7), "", county),
          end_label = if_else(date == max(date), core, NA_character_)) %>% 
   ungroup() %>% 
   left_join(il_county_pops, by = "county") %>% 
@@ -204,4 +205,111 @@ apple_mobility %>%
   ggplot(aes(x = date, y = index)) +
   geom_line()
 ```
+
+
+
+```{r}
+top_n_state <- function(data, n = 5, wt = cases) {
+  data %>%
+  group_by(state) %>%
+  filter(date == max(date)) %>%
+  ungroup() %>%
+  top_n(n, wt = {{ wt }}) %>%
+  pull(state)
+}
+
+state_df <- nytcovstate %>% 
+  left_join(state_pops, by = c("state" = "State")) %>% 
+  mutate(cases_per_capita = 1000 * cases / Pop)
+state_df %>% 
+  group_by(state) %>% 
+  mutate(days_since = date - min(date),
+         core = if_else(state %nin% top_n_state(state_df, n=7, wt = cases_per_capita), "", state),
+         end_label = if_else(date == max(date), core, NA_character_)) %>% 
+  ungroup() %>% 
+  ggplot(aes(x = days_since, y = cases_per_capita, group = state, label = end_label, color = core)) +
+  geom_line() +
+  geom_text_repel(segment.color = NA, nudge_x = 2, nudge_y = 0.1) +
+  #scale_y_log10() +
+  #scale_x_continuous(limits = c(0,100)) +
+  scale_color_manual(values = ghColorSelect("grey-400", "blue", "red", "green", "yellow-800", "purple", "orange", "pink")) +
+  guides(color = FALSE) +
+  labs(title = "State Per Capita Cases for Top 7 States",
+       x = "Days Since First Case",
+       y = "Cases Per 1,000") +
+  nowt()
+```
+
+```{r}
+state_df %>% 
+  group_by(state) %>% 
+  mutate(days_since = date - min(date),
+         core = if_else(Region != "South", "", state),
+         end_label = if_else(date == max(date), core, NA_character_)) %>% 
+  ungroup() %>% 
+  filter(Region == "South") %>% 
+  ggplot(aes(x = days_since, y = cases_per_capita, group = state, label = end_label, color = core)) +
+  geom_line() +
+  geom_text_repel(segment.color = NA, nudge_x = 2, nudge_y = 0.1) +
+  #scale_y_log10() +
+  #scale_x_continuous(limits = c(0,100)) +
+  #scale_color_manual(values = ghColorSelect("grey-400", "blue", "red", "green", "yellow-800", "purple", "orange", "pink")) +
+  guides(color = FALSE) +
+  labs(title = "State Per Capita Cases for the South",
+       x = "Days Since First Case",
+       y = "Cases Per 1,000") +
+  nowt()
+ggsave("img/southern_states.png", width = 8, height = 6, dpi = 400)
+```
+
+
+```{r}
+state_df %>% 
+  #filter(cases >= 100) %>% 
+  group_by(state) %>% 
+  mutate(days_since = date - min(date),
+         core = if_else(Region != "Midwest", "", state),
+         end_label = if_else(date == max(date), core, NA_character_)) %>% 
+  ungroup() %>% 
+  filter(Region == "Midwest") %>% 
+  ggplot(aes(x = days_since, y = cases_per_capita, group = state, label = end_label, color = core)) +
+  geom_line() +
+  geom_text_repel(segment.color = NA, nudge_x = 2, nudge_y = 0.1) +
+  #scale_y_log10() +
+  #scale_x_continuous(limits = c(0,100)) +
+  #scale_color_manual(values = ghColorSelect("grey-400", "blue", "red", "green", "yellow-800", "purple", "orange", "pink")) +
+  guides(color = FALSE) +
+  labs(title = "State Per Capita Cases for the Midwest",
+       x = "Days Since First Case",
+       y = "Cases Per 1,000") +
+  nowt()
+ggsave("img/midwest_states.png", width = 8, height = 6, dpi = 400)
+```
+
+
+
+
+
+```{r}
+state_df %>% 
+  group_by(state) %>% 
+  mutate(days_since = date - min(date),
+         core = if_else(Region != "West Coast", "", state),
+         end_label = if_else(date == max(date), core, NA_character_)) %>% 
+  ungroup() %>% 
+  filter(Region == "West Coast") %>% 
+  ggplot(aes(x = days_since, y = cases_per_capita, group = state, label = end_label, color = core)) +
+  geom_line() +
+  geom_text_repel(segment.color = NA, nudge_x = 2, nudge_y = 0.1) +
+  #scale_y_log10() +
+  #scale_x_continuous(limits = c(0,100)) +
+  #scale_color_manual(values = ghColorSelect("grey-400", "blue", "red", "green", "yellow-800", "purple", "orange", "pink")) +
+  guides(color = FALSE) +
+  labs(title = "State Per Capita Cases for the West Coast",
+       x = "Days Since First Case",
+       y = "Cases Per 1,000") +
+  nowt()
+ggsave("img/west_states.png", width = 8, height = 6, dpi = 400)
+```
+
 
