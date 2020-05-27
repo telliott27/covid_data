@@ -27,3 +27,10 @@ nyt_county_data <- nytcovcounty %>%
     cases_per_capita = cases / population,
     deaths_per_capita = deaths / population
   )
+
+
+state_pops <- read_csv("state_populations.csv")
+
+nyt_state_df <- nytcovstate %>% 
+  left_join(state_pops, by = c("state" = "State")) %>% 
+  mutate(cases_per_capita = 1000 * cases / Pop)

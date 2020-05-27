@@ -26,7 +26,6 @@ ca_county_pops <- read_csv("ca_county_pops.csv") %>%
   mutate(county = str_replace(County, " County", ""))
 il_county_pops <- read_csv("il_county_pops.csv") %>% 
   mutate(county = str_replace(County, " County", ""))
-state_pops <- read_csv("state_populations.csv")
 
 source("add_county_pop.R")
 
@@ -47,6 +46,14 @@ top_n_state <- function(data, n = 5, wt = cases) {
   top_n(n, wt = {{ wt }}) %>%
   pull(state)
 }
+
+theme_covid <-   list(theme(
+    panel.background = element_blank(),
+    panel.grid.major.y = element_line(color = ghColorSelect("grey-200"))
+  ),
+  scale_color_manual(values = ghColorSelect("grey-400", "blue", "red", "green", "yellow-800", "purple", "orange", "pink")),
+  scale_size_identity(),
+  guides(color = FALSE) )
 ```
 
 # California
@@ -179,20 +186,93 @@ gpdf %>%
 ggsave("img/ca_counties.png", width = 8, height = 6, dpi = 300)
 ```
 
+
 ```{r}
-ca_counties %>% 
-    group_by(county) %>% 
+county_df <- nyt_county_data %>% 
+  filter(state == "California") %>% 
+  group_by(county) %>% 
+  arrange(date) %>% 
+  mutate(weekly_change = cases - lag(cases,7),
+         change_per_capita = weekly_change / population
+         ) %>% 
+  ungroup()
+gpdf <- county_df %>% 
+  filter(full_name %in% top_n_counties(county_df, n = 20, wt = change_per_capita))
+gpdf <- gpdf %>% 
+  group_by(county) %>% 
   mutate(days_since = date - min(date),
-         core = if_else(county %nin% counties_to_show, "", county),
+         core = if_else(
+           county %nin% top_n_counties(gpdf, n=7, wt = change_per_capita, label = county), "", 
+           county 
+           ),
          linesize = if_else(core == "", 0.5, 1),
          end_label = if_else(date == max(date), core, NA_character_)) %>% 
   ungroup() %>% 
-  left_join(ca_county_pops, by = "county") %>% 
-  mutate(cases_per_capita2 = 1000 * cases / Population) %>% 
-  group_by(county) %>% 
-  filter(date == max(date)) %>% 
-  select(date, county, cases, deaths, population, Population, cases_per_capita, cases_per_capita2)
+  filter(!is.na(weekly_change))
+
+gpdf %>% 
+  #filter(date >= ymd("2020-04-01")) %>% 
+    ggplot(aes(x = days_since, y = change_per_capita*1000, group = full_name, label = end_label, color = core)) +
+  geom_line(aes(size = linesize)) +
+  geom_text_repel(segment.color = NA, nudge_x = 2) +
+  #scale_y_log10() +
+  #scale_x_continuous(limits = c(0,100)) +
+  scale_color_manual(values = ghColorSelect("grey-400", "blue", "red", "green", "yellow-800", "purple", "orange", "pink")) +
+  scale_size_identity() +
+  guides(color = FALSE) +
+  labs(title = "New Cases In Last 7 Days Per Capita, California Counties",
+       x = "Days Since First Case",
+       y = "New Cases in Last 7 Days Per 1,000 Pop.")
+ggsave("img/ca_weekly_counties.png", width = 8, height = 6, dpi = 400)
 ```
+
+
+```{r}
+lagged_data <- nyt_county_data %>% 
+  mutate(lag7 = date + days(7)) %>% 
+  select(full_name, lag7, cases_lagged7 = cases)
+
+county_df <- nyt_county_data %>% 
+  filter(!is.na(population) & state == "California") %>% 
+  left_join(lagged_data, by = c("full_name" = "full_name", "date" = "lag7")) %>% 
+  mutate(weekly_change = cases - cases_lagged7,
+         change_per_capita = weekly_change / population
+         )
+gpdf <- county_df %>% 
+  #filter(county %in% counties_to_show) %>% 
+  nowt()
+gpdf <- gpdf %>% 
+  group_by(full_name) %>% 
+  mutate(days_since = date - min(date),
+         core = if_else(
+           county %nin% counties_to_show, "", 
+           county 
+           ),
+         linesize = if_else(core == "", 0.5, 1),
+         end_label = if_else(date == max(date), core, NA_character_)) %>% 
+  ungroup() %>% 
+  filter(!is.na(weekly_change))
+
+gpdf %>% 
+  #filter(date >= ymd("2020-04-01")) %>% 
+    ggplot(aes(x = days_since, y = change_per_capita*1000, group = full_name, label = end_label, color = core)) +
+  geom_line(aes(size = linesize)) +
+  geom_text_repel(segment.color = NA, nudge_x = 2) +
+  theme(
+    panel.background = element_blank(),
+    panel.grid.major.y = element_line(color = ghColorSelect("grey-200"))
+  ) +
+  #scale_y_log10() +
+  #scale_x_continuous(limits = c(0,100)) +
+  scale_color_manual(values = ghColorSelect("grey-400", "blue", "red", "green", "yellow-800", "purple", "orange", "pink")) +
+  scale_size_identity() +
+  guides(color = FALSE) +
+  labs(title = "New Cases In Last 7 Days Per Capita, U.S. Counties",
+       x = "Days Since First Case",
+       y = "New Cases in Last 7 Days Per 1,000 Pop.")
+ggsave("img/ca_selected_weekly_counties.png", width = 8, height = 6, dpi = 400)
+```
+
 
 
 ```{r}
@@ -238,11 +318,7 @@ ca_counties %>%
   ggplot(aes(x = days_since, y = cases_per_capita, group = county, label = end_label, color = core)) +
   geom_line(aes(size = linesize)) +
   geom_text_repel(segment.color = NA, nudge_x = 2, nudge_y = 0.1) +
-  #scale_y_log10() +
-  #scale_x_continuous(limits = c(0,100)) +
-  scale_color_manual(values = ghColorSelect("grey-400", "blue", "red", "green", "yellow-800", "purple", "orange", "pink")) +
-  scale_size_identity() +
-  guides(color = FALSE) +
+  theme_covid +
   labs(title = "Cases Per Capita of Coronavirus in California Counties",
        x = "Days Since First Case",
        y = "Cases Per 1,000 Population")
@@ -250,34 +326,10 @@ ggsave("img/ca_counties_per_capita.png", width = 8, height = 6, dpi = 300)
 ```
 
 
-```{r}
-ca_counties <- nytcovcounty %>% 
-  filter(state == "California") %>% 
-  group_by(county) %>% 
-  arrange(date) %>% 
-  mutate(new_cases = coalesce(cases - lag(cases),1))
-ca_counties
-```
-
-
 
 
 ```{r}
-ca_counties %>% 
-  group_by(county) %>% 
-  mutate(days_since = date - min(date),
-         core = if_else(county %nin% counties_to_show, "", county),
-         end_label = if_else(date == max(date), core, NA_character_)) %>% 
-  ungroup() %>% 
-  left_join(ca_county_pops, by = "county") %>% 
-  mutate(cases_per_capita = 1000 * cases / Population) %>% 
-  arrange(desc(cases_per_capita)) %>% 
-  select(date, county, cases, Population, cases_per_capita)
-```
-
-
-```{r}
-nytcovcounty %>% 
+nyt_county_data %>% 
   filter(state == "California") %>% 
   group_by(county) %>% 
   mutate(days_since = date - min(date),
@@ -299,12 +351,12 @@ ggsave("img/ca_counties_deaths.png", width = 8, height = 6, dpi = 300)
 
 
 ```{r}
-ny_counties <- nytcovcounty %>% 
+ny_counties <- nyt_county_data %>% 
   filter(state == "New York")
 ny_counties %>% 
   group_by(county) %>% 
   mutate(days_since = date - min(date),
-         core = if_else(county %nin% top_n_counties(ny_counties, n=7), "", county),
+         core = if_else(full_name %nin% top_n_counties(ny_counties, n=7), "", county),
          end_label = if_else(date == max(date), core, NA_character_)) %>% 
   ggplot(aes(x = date, y = cases, group = county, label = end_label, color = core)) +
   geom_line() +
@@ -323,17 +375,16 @@ ny_counties %>%
 
 
 ```{r}
-il_counties <- nytcovcounty %>% 
+il_counties <- nyt_county_data %>% 
   filter(state == "Illinois")
 il_counties %>% 
   group_by(county) %>% 
   mutate(days_since = date - min(date),
-         core = if_else(county %nin% top_n_counties(il_counties, n=7), "", county),
+         core = if_else(full_name %nin% top_n_counties(il_counties, n=7), "", county),
          end_label = if_else(date == max(date), core, NA_character_)) %>% 
   ungroup() %>% 
   left_join(il_county_pops, by = "county") %>% 
-  mutate(cases_per_capita = 1000 * cases / Population) %>% 
-  ggplot(aes(x = days_since, y = cases_per_capita, group = county, label = end_label, color = core)) +
+  ggplot(aes(x = days_since, y = cases_per_capita*1000, group = county, label = end_label, color = core)) +
   geom_line() +
   geom_text_repel(segment.color = NA, nudge_x = 2, nudge_y = 0.1) +
   #scale_y_log10() +
@@ -363,13 +414,11 @@ apple_mobility %>%
 # State Level Data
 
 ```{r}
-state_df <- nytcovstate %>% 
-  left_join(state_pops, by = c("state" = "State")) %>% 
-  mutate(cases_per_capita = 1000 * cases / Pop)
-state_df %>% 
+nyt_state_df %>% 
   group_by(state) %>% 
   mutate(days_since = date - min(date),
          core = if_else(state %nin% top_n_state(state_df, n=7, wt = cases_per_capita), "", state),
+         linesize = if_else(core == "", 0.5, 1),
          end_label = if_else(date == max(date), core, NA_character_)) %>% 
   ungroup() %>% 
   ggplot(aes(x = days_since, y = cases_per_capita, group = state, label = end_label, color = core)) +
@@ -386,7 +435,40 @@ state_df %>%
 ```
 
 ```{r}
-state_df %>% 
+state_lagged <- nyt_state_df %>% 
+  mutate(lagged_date = date + days(7)) %>% 
+  select(lagged_date, state, lagged_cases = cases)
+state_df <- nyt_state_df %>% 
+  left_join(state_lagged, by = c("state", "date" = "lagged_date")) %>% 
+  mutate(
+    weekly_change = cases - lagged_cases,
+    change_per_capita = weekly_change / Pop
+  )
+gpdf <- state_df %>% 
+  group_by(state) %>% 
+  mutate(
+    days_since = date - min(date),
+    core = if_else(state %nin% top_n_state(state_df, 7, wt = change_per_capita), "", state),
+    end_label = if_else(date == max(date), core, NA_character_),
+    linesize = if_else(core == "", 0.5, 1)
+  ) %>% 
+  filter(!is.na(change_per_capita))
+gpdf %>% 
+  ggplot(aes(x = days_since, y = change_per_capita*1000, group = state, color = core,size = linesize, label = end_label)) +
+  geom_line() +
+  geom_text_repel(segment.color = NA, nudge_x = 2, size = 4) +
+  theme_covid +
+  labs(
+    title = "New Cases in Last 7 Days Per Capita",
+    x = "Days Since First Case",
+    y = "New Cases Per 1,000 Pop."
+  )
+ggsave("img/usa_state_new_cases.png", width = 8, height = 6, dpi = 400)
+```
+
+
+```{r}
+nyt_state_df %>% 
   group_by(state) %>% 
   mutate(days_since = date - min(date),
          core = if_else(Region != "South", "", state),
@@ -409,7 +491,7 @@ ggsave("img/southern_states.png", width = 8, height = 6, dpi = 400)
 
 
 ```{r}
-state_df %>% 
+nyt_state_df %>% 
   #filter(cases >= 100) %>% 
   group_by(state) %>% 
   mutate(days_since = date - min(date),
@@ -436,7 +518,7 @@ ggsave("img/midwest_states.png", width = 8, height = 6, dpi = 400)
 
 
 ```{r}
-state_df %>% 
+nyt_state_df %>% 
   group_by(state) %>% 
   mutate(days_since = date - min(date),
          core = if_else(Region != "West Coast", "", state),
@@ -535,3 +617,94 @@ gpdf %>%
 ggsave("img/rural_counties_raw.png", width = 8, height = 6, dpi = 400)
 ```
 
+```{r}
+lagged_data <- nyt_county_data %>% 
+  mutate(lag7 = date + days(7)) %>% 
+  select(full_name, lag7, cases_lagged7 = cases)
+
+county_df <- nyt_county_data %>% 
+  filter(!is.na(population)) %>% 
+  left_join(lagged_data, by = c("full_name" = "full_name", "date" = "lag7")) %>% 
+  mutate(weekly_change = cases - cases_lagged7,
+         change_per_capita = weekly_change / population
+         )
+gpdf <- county_df %>% 
+  filter(full_name %in% top_n_counties(county_df, n = 20, wt = change_per_capita))
+gpdf <- gpdf %>% 
+  group_by(full_name) %>% 
+  mutate(days_since = date - min(date),
+         core = if_else(
+           full_name %nin% top_n_counties(gpdf, n=7, wt = change_per_capita, label = full_name), "", 
+           full_name 
+           ),
+         linesize = if_else(core == "", 0.5, 1),
+         end_label = if_else(date == max(date), core, NA_character_)) %>% 
+  ungroup() %>% 
+  filter(!is.na(weekly_change))
+
+gpdf %>% 
+  #filter(date >= ymd("2020-04-01")) %>% 
+    ggplot(aes(x = days_since, y = change_per_capita*1000, group = full_name, label = end_label, color = core)) +
+  geom_line(aes(size = linesize)) +
+  geom_text_repel(segment.color = NA, nudge_x = 2) +
+  theme(
+    panel.background = element_blank(),
+    panel.grid.major.y = element_line(color = ghColorSelect("grey-200"))
+  ) +
+  #scale_y_log10() +
+  #scale_x_continuous(limits = c(0,100)) +
+  scale_color_manual(values = ghColorSelect("grey-400", "blue", "red", "green", "yellow-800", "purple", "orange", "pink")) +
+  scale_size_identity() +
+  guides(color = FALSE) +
+  labs(title = "New Cases In Last 7 Days Per Capita, U.S. Counties",
+       x = "Days Since First Case",
+       y = "New Cases in Last 7 Days Per 1,000 Pop.")
+ggsave("img/usa_weekly_counties.png", width = 8, height = 6, dpi = 400)
+```
+
+
+
+```{r}
+lagged_data <- nyt_county_data %>% 
+  mutate(lag7 = date + days(7)) %>% 
+  select(full_name, lag7, deaths_lagged7 = deaths)
+
+county_df <- nyt_county_data %>% 
+  filter(!is.na(population)) %>% 
+  left_join(lagged_data, by = c("full_name" = "full_name", "date" = "lag7")) %>% 
+  mutate(weekly_change = deaths - deaths_lagged7,
+         change_per_capita = weekly_change / population
+         )
+gpdf <- county_df %>% 
+  filter(full_name %in% top_n_counties(county_df, n = 20, wt = change_per_capita))
+gpdf <- gpdf %>% 
+  group_by(full_name) %>% 
+  mutate(days_since = date - min(date),
+         core = if_else(
+           full_name %nin% top_n_counties(gpdf, n=7, wt = change_per_capita, label = full_name), "", 
+           full_name 
+           ),
+         linesize = if_else(core == "", 0.5, 1),
+         end_label = if_else(date == max(date), core, NA_character_)) %>% 
+  ungroup() %>% 
+  filter(!is.na(weekly_change))
+
+gpdf %>% 
+  #filter(date >= ymd("2020-04-01")) %>% 
+    ggplot(aes(x = days_since, y = change_per_capita*1000, group = full_name, label = end_label, color = core)) +
+  geom_line(aes(size = linesize)) +
+  geom_text_repel(segment.color = NA, nudge_x = 2) +
+  theme(
+    panel.background = element_blank(),
+    panel.grid.major.y = element_line(color = ghColorSelect("grey-200"))
+  ) +
+  #scale_y_log10() +
+  #scale_x_continuous(limits = c(0,100)) +
+  scale_color_manual(values = ghColorSelect("grey-400", "blue", "red", "green", "yellow-800", "purple", "orange", "pink")) +
+  scale_size_identity() +
+  guides(color = FALSE) +
+  labs(title = "New Deaths In Last 7 Days Per Capita, U.S. Counties",
+       x = "Days Since First Case",
+       y = "Deaths Per 1,000 Pop.")
+ggsave("img/usa_weekly_deaths_counties.png", width = 8, height = 6, dpi = 400)
+```
