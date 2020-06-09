@@ -79,7 +79,12 @@ state_pops <- read_csv(here("state_populations.csv"))
 
 nyt_state_df <- nytcovstate %>% 
   left_join(state_pops, by = c("state" = "State")) %>% 
-  mutate(cases_per_capita = 1000 * cases / Pop)
+  mutate(cases_per_capita = 1000 * cases / Pop) %>% 
+  group_by(state) %>% 
+  arrange(date) %>% 
+  mutate(
+    weekly_change = cases - lag(cases, 7)
+  )
 
 #' ghColors
 #'

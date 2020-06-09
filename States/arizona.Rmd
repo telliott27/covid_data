@@ -35,7 +35,7 @@ kable <- partial(knitr::kable, format.args = list(big.mark = ","))
 ```{r az_state}
 nyt_state_df %>% 
   filter(state == "Arizona" & cases > 1) %>% 
-  mutate(days_since = date - min(date)) %>% 
+  mutate(days_since = as.integer(date - min(date))) %>% 
   ggplot(aes(x = days_since, y = cases)) +
   geom_line(size = 1) +
   scale_y_continuous(labels = scales::comma) +
@@ -45,12 +45,24 @@ nyt_state_df %>%
        y = "Cumulative Cases")
 ```
 
+```{r az_state_weekly_change}
+nyt_state_df %>% 
+  filter(state == "Arizona" & cases > 1) %>% 
+  mutate(days_since = as.integer(date - min(date))) %>% 
+  ggplot(aes(x = days_since, y = weekly_change)) +
+  geom_line(size = 1) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_covid +
+  labs(title = "Weekly New Cases of Coronavirus in Arizona",
+       x = "Days Since Second Case",
+       y = "New Cases in Previous 7 Days")
+```
 
 ```{r}
 az_county <- nyt_county_data %>% 
   filter(state == "Arizona" & cases > 1) %>% 
   group_by(county) %>% 
-  mutate(days_since = date - min(date)) %>% 
+  mutate(days_since = as.integer(date - min(date))) %>% 
   ungroup()
 gpdf <- az_county %>% 
   group_by(county) %>% 
