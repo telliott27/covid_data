@@ -1,0 +1,148 @@
+---
+title: "Arizona"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, fig.width = 8, fig.height = 6, fig.retina = 4)
+# get latest data
+remotes::install_github("kjhealy/covdata")
+
+library(tidyverse)
+library(covdata)
+library(ggrepel)
+library(paletteer)
+library(prismatic)
+library(here)
+
+
+source(here("add_county_pop.R"))
+
+
+
+theme_covid <-   list(theme(
+    panel.background = element_blank(),
+    panel.grid.major.y = element_line(color = ghColorSelect("grey-200"))
+  ),
+  scale_color_manual(values = ghColorSelect("grey-400", "blue", "red", "green", "yellow-800", "purple", "orange", "pink")),
+  scale_size_identity(),
+  guides(color = FALSE) )
+
+kable <- partial(knitr::kable, format.args = list(big.mark = ","))
+```
+
+
+```{r az_state}
+nyt_state_df %>% 
+  filter(state == "Arizona" & cases > 1) %>% 
+  mutate(days_since = date - min(date)) %>% 
+  ggplot(aes(x = days_since, y = cases)) +
+  geom_line(size = 1) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_covid +
+  labs(title = "Cumulative Cases of Coronavirus in Arizona",
+       x = "Days Since Second Case",
+       y = "Cumulative Cases")
+```
+
+
+```{r}
+az_county <- nyt_county_data %>% 
+  filter(state == "Arizona" & cases > 1) %>% 
+  group_by(county) %>% 
+  mutate(days_since = date - min(date)) %>% 
+  ungroup()
+gpdf <- az_county %>% 
+  group_by(county) %>% 
+  mutate(core = if_else(
+           county %nin% top_n_counties(az_county, n=7, wt = cases, label = county), "", 
+           county 
+           ),
+         linesize = if_else(core == "", 0.5, 1),
+         end_label = if_else(date == max(date), core, NA_character_)) %>% 
+  ungroup()
+```
+
+
+
+```{r az_county_raw_cases}
+gpdf %>% 
+  ggplot(aes(x = days_since, y = cases, group = county, label = end_label, color = core)) +
+  geom_line(size = 1) +
+  geom_text_repel(segment.color = NA, nudge_x = 2, nudge_y = 0.1) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_covid +
+  labs(title = "Cumulative Cases of Coronavirus in Arizona Counties",
+       x = "Days Since Second Case",
+       y = "Cumulative Cases")
+```
+
+```{r az_county_per_capita}
+gpdf <- az_county %>% 
+  group_by(county) %>% 
+  mutate(core = if_else(
+           county %nin% top_n_counties(az_county, n=7, wt = cases_per_capita, label = county), "", 
+           county 
+           ),
+         linesize = if_else(core == "", 0.5, 1),
+         end_label = if_else(date == max(date), core, NA_character_)) %>% 
+  ungroup()
+gpdf %>% 
+  ggplot(aes(x = days_since, y = cases_per_capita*1000, group = county, label = end_label, color = core)) +
+  geom_line(size = 1) +
+  geom_text_repel(segment.color = NA, nudge_x = 2) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_covid +
+  labs(title = "Cases per Capita of Coronavirus in Arizona Counties",
+       x = "Days Since Second Case",
+       y = "Cases Per 1,000 Population")
+```
+
+
+
+
+
+```{r az_county_weekly_change}
+gpdf <- az_county %>% 
+  group_by(county) %>% 
+  mutate(core = if_else(
+           county %nin% top_n_counties(az_county, n=7, wt = weekly_change, label = county), "", 
+           county 
+           ),
+         linesize = if_else(core == "", 0.5, 1),
+         end_label = if_else(date == max(date), core, NA_character_)) %>% 
+  ungroup()
+gpdf %>% 
+  ggplot(aes(x = days_since, y = weekly_change, group = county, label = end_label, color = core)) +
+  geom_line(size = 1) +
+  geom_text_repel(segment.color = NA, nudge_x = 2) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_covid +
+  labs(title = "Weekly New Cases of Coronavirus in Arizona Counties",
+       x = "Days Since Second Case",
+       y = "New Cases in Last 7 Days")
+```
+
+
+```{r az_county_change_per_capita}
+gpdf <- az_county %>% 
+  group_by(county) %>% 
+  mutate(core = if_else(
+           county %nin% top_n_counties(az_county, n=7, wt = change_per_capita, label = county), "", 
+           county 
+           ),
+         linesize = if_else(core == "", 0.5, 1),
+         end_label = if_else(date == max(date), core, NA_character_)) %>% 
+  ungroup()
+gpdf %>% 
+  ggplot(aes(x = days_since, y = change_per_capita*1000, group = county, label = end_label, color = core)) +
+  geom_line(size = 1) +
+  geom_text_repel(segment.color = NA, nudge_x = 2) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_covid +
+  labs(title = "Weekly New Cases Per Capita of Coronavirus in Arizona Counties",
+       x = "Days Since Second Case",
+       y = "New Cases in Last 7 Days per 1,000 Population")
+```
+
+

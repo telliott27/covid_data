@@ -2,7 +2,30 @@ library(tidyverse)
 library(lubridate)
 library(here)
 
-county_df <- read_csv("co-est2019-alldata.csv")
+county_df <- read_csv(here("co-est2019-alldata.csv"))
+
+## Convenince "Not in" operator
+"%nin%" <- function(x, y) {
+  return( !(x %in% y) )
+}
+
+top_n_counties <- function(data, n = 5, wt = cases, label = full_name) {
+  data %>%
+    group_by(full_name) %>%
+    filter(date == max(date)) %>%
+    ungroup() %>%
+    top_n(n, wt = {{ wt }}) %>%
+    pull({{ label }})
+}
+
+top_n_state <- function(data, n = 5, wt = cases) {
+  data %>%
+    group_by(state) %>%
+    filter(date == max(date)) %>%
+    ungroup() %>%
+    top_n(n, wt = {{ wt }}) %>%
+    pull(state)
+}
 
 bay_area <- c(
   "Alameda",
@@ -52,7 +75,7 @@ nyt_county_data <- nytcovcounty %>%
   ungroup()
 
 
-state_pops <- read_csv("state_populations.csv")
+state_pops <- read_csv(here("state_populations.csv"))
 
 nyt_state_df <- nytcovstate %>% 
   left_join(state_pops, by = c("state" = "State")) %>% 
