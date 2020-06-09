@@ -4,6 +4,18 @@ library(here)
 
 county_df <- read_csv("co-est2019-alldata.csv")
 
+bay_area <- c(
+  "Alameda",
+  "Contra Costa",
+  "Marin",
+  "Napa",
+  "San Francisco",
+  "San Mateo",
+  "Santa Clara",
+  "Solano",
+  "Sonoma"
+)
+
 county_pop <- county_df %>% 
   filter(SUMLEV == "050") %>% 
   mutate(fips = str_c(STATE,COUNTY)) %>% 
@@ -23,10 +35,21 @@ nyt_county_data <- nytcovcounty %>%
     ),
     full_name = str_c(county, ", ", state)
   ) %>% 
+  group_by(full_name) %>% 
+  arrange(date) %>% 
   mutate(
     cases_per_capita = cases / population,
-    deaths_per_capita = deaths / population
-  )
+    deaths_per_capita = deaths / population,
+    weekly_change = cases - lag(cases, 7),
+    change_per_capita = weekly_change / population,
+    percent_weekly_change = weekly_change / lag(cases, 7),
+    percent_weekly_change = case_when(
+      cases < 100 ~ NA_real_,
+      percent_weekly_change == Inf ~ NA_real_,
+      TRUE ~ percent_weekly_change
+    )
+  ) %>% 
+  ungroup()
 
 
 state_pops <- read_csv("state_populations.csv")
