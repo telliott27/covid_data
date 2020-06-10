@@ -1,0 +1,166 @@
+---
+title: "California"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, fig.width = 8, fig.height = 6, fig.retina = 4)
+# get latest data
+remotes::install_github("kjhealy/covdata")
+
+library(tidyverse)
+library(covdata)
+library(ggrepel)
+library(paletteer)
+library(prismatic)
+library(here)
+
+
+source(here("add_county_pop.R"))
+
+report_state <- "California"
+
+start_date <- floor_date(today(), "month") - months(3)
+end_date <- today() + days(10)
+
+theme_covid <-   list(theme(
+    panel.background = element_blank(),
+    panel.grid.major.y = element_line(color = ghColorSelect("grey-200"))
+  ),
+  scale_color_manual(values = ghColorSelect("grey-400", "blue", "red", "green", "yellow-800", "purple", "orange", "pink")),
+  scale_size_identity(),
+  guides(color = FALSE),
+    scale_x_date(limits = c(start_date, end_date)),
+  scale_alpha_identity())
+
+kable <- partial(knitr::kable, format.args = list(big.mark = ","))
+```
+
+
+```{r az_state}
+nyt_state_df %>% 
+  filter(state == report_state & cases >= 1) %>% 
+  mutate(days_since = as.integer(date - min(date))) %>% 
+  ggplot(aes(x = date, y = cases)) +
+  geom_line(size = 1) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_covid +
+  labs(title = str_glue("Cumulative Cases of Coronavirus in { report_state }"),
+       x = NULL,
+       y = "Cumulative Cases")
+```
+
+```{r az_state_weekly_change}
+nyt_state_df %>% 
+  filter(state == report_state) %>% 
+  mutate(days_since = as.integer(date - min(date))) %>% 
+  ggplot(aes(x = date, y = weekly_change)) +
+  geom_line(size = 1) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_covid +
+  labs(title = str_glue("Weekly New Cases of Coronavirus in { report_state }"),
+       x = NULL,
+       y = "New Cases in Previous 7 Days")
+```
+
+```{r}
+state_county <- nyt_county_data %>% 
+  filter(state == report_state) %>% 
+  group_by(county) %>% 
+  mutate(days_since = as.integer(date - min(date))) %>% 
+  ungroup()
+gpdf <- state_county %>% 
+  group_by(county) %>% 
+  mutate(core = if_else(
+           county %nin% top_n_counties(state_county, n=7, wt = cases, label = county), "", 
+           county 
+           ),
+         linesize = if_else(core == "", 0.5, 1),
+         end_label = if_else(date == max(date), core, NA_character_)) %>% 
+  ungroup()
+```
+
+
+
+```{r county_raw_cases}
+gpdf %>% 
+  filter(date >= start_date) %>% 
+  ggplot(aes(x = date, y = cases, group = county, label = end_label, color = core)) +
+  geom_line(aes(size = linesize, alpha = linesize)) +
+  geom_text_repel(segment.color = NA, nudge_x = 2, nudge_y = 0.1) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_covid +
+  labs(title = str_glue("Cumulative Cases of Coronavirus in California Counties"),
+       x = NULL,
+       y = "Cumulative Cases")
+```
+
+```{r county_per_capita}
+gpdf <- state_county %>% 
+  group_by(county) %>% 
+  mutate(core = if_else(
+           county %nin% top_n_counties(state_county, n=7, wt = cases_per_capita, label = county), "", 
+           county 
+           ),
+         linesize = if_else(core == "", 0.5, 1),
+         end_label = if_else(date == max(date), core, NA_character_)) %>% 
+  ungroup()
+gpdf %>% 
+  ggplot(aes(x = date, y = cases_per_capita*1000, group = county, label = end_label, color = core)) +
+  geom_line(aes(size = linesize, alpha = linesize)) +
+  geom_text_repel(segment.color = NA, nudge_x = 2) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_covid +
+  labs(title = str_glue("Cases per Capita of Coronavirus in { report_state } Counties"),
+       x = NULL,
+       y = "Cases Per 1,000 Population")
+```
+
+
+
+
+
+```{r county_weekly_change}
+gpdf <- state_county %>% 
+  group_by(county) %>% 
+  mutate(core = if_else(
+           county %nin% top_n_counties(state_county, n=7, wt = weekly_change, label = county), "", 
+           county 
+           ),
+         linesize = if_else(core == "", 0.5, 1),
+         end_label = if_else(date == max(date), core, NA_character_)) %>% 
+  ungroup()
+gpdf %>% 
+  ggplot(aes(x = date, y = weekly_change, group = county, label = end_label, color = core)) +
+  geom_line(aes(size = linesize, alpha = linesize)) +
+  geom_text_repel(segment.color = NA, nudge_x = 2) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_covid +
+  labs(title = str_glue("Weekly New Cases of Coronavirus in {report_state} Counties"),
+       x = NULL,
+       y = "New Cases in Last 7 Days")
+```
+
+
+```{r county_change_per_capita}
+gpdf <- state_county %>% 
+  group_by(county) %>% 
+  mutate(core = if_else(
+           county %nin% top_n_counties(state_county, n=7, wt = change_per_capita, label = county), "", 
+           county 
+           ),
+         linesize = if_else(core == "", 0.5, 1),
+         end_label = if_else(date == max(date), core, NA_character_)) %>% 
+  ungroup()
+gpdf %>% 
+  ggplot(aes(x = date, y = change_per_capita*1000, group = county, label = end_label, color = core)) +
+  geom_line(aes(size = linesize, alpha = linesize)) +
+  geom_text_repel(segment.color = NA, nudge_x = 2) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_covid +
+  labs(title = str_glue("Weekly New Cases Per Capita of Coronavirus in { report_state } Counties"),
+       x = NULL,
+       y = "New Cases in Last 7 Days per 1,000 Population")
+```
+
+
