@@ -83,7 +83,11 @@ nyt_state_df <- nytcovstate %>%
   group_by(state) %>% 
   arrange(date) %>% 
   mutate(
-    weekly_change = cases - lag(cases, 7)
+    weekly_change = cases - lag(cases, 7),
+    change_per_capita = 1000 * weekly_change / Pop,
+    deaths_per_capita = 1000 * deaths / Pop,
+    deaths_weekly_change = deaths - lag(deaths, 7),
+    deaths_change_per_capita = 1000 * deaths_weekly_change / Pop
   )
 
 #' ghColors
