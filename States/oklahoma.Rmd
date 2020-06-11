@@ -167,3 +167,119 @@ gpdf %>%
 ```
 
 
+# Deaths
+
+
+```{r az_state_deaths}
+nyt_state_df %>% 
+  filter(state == report_state) %>% 
+  ggplot(aes(x = date, y = deaths)) +
+  geom_line(size = 1) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_covid +
+  labs(title = str_glue("Cumulative COVID Deaths in { report_state }"),
+       x = NULL,
+       y = "Cumulative Deaths")
+```
+
+```{r az_state_weekly_change_deaths}
+nyt_state_df %>% 
+  filter(state == report_state) %>% 
+  ggplot(aes(x = date, y = deaths_weekly_change)) +
+  geom_line(size = 1) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_covid +
+  labs(title = str_glue("Weekly New COVID Deaths in { report_state }"),
+       x = NULL,
+       y = "New Deaths in Previous 7 Days")
+```
+
+
+
+```{r county_raw_deaths}
+gpdf <- state_county %>% 
+  group_by(county) %>% 
+  mutate(core = if_else(
+           county %nin% top_n_counties(state_county, n=7, wt = deaths, label = county), "", 
+           county 
+           ),
+         linesize = if_else(core == "", 0.5, 1),
+         end_label = if_else(date == max(date), core, NA_character_)) %>% 
+  ungroup()
+gpdf %>% 
+  filter(date >= start_date) %>% 
+  ggplot(aes(x = date, y = deaths, group = county, label = end_label, color = core)) +
+  geom_line(aes(size = linesize, alpha = linesize)) +
+  geom_text_repel(segment.color = NA, nudge_x = 2, nudge_y = 0.1) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_covid +
+  labs(title = str_glue("Cumulative COVID Deaths in { report_state } Counties"),
+       x = NULL,
+       y = "Cumulative Deaths")
+```
+
+```{r county_per_capita_deaths}
+gpdf <- state_county %>% 
+  group_by(county) %>% 
+  mutate(core = if_else(
+           county %nin% top_n_counties(state_county, n=7, wt = deaths_per_capita, label = county), "", 
+           county 
+           ),
+         linesize = if_else(core == "", 0.5, 1),
+         end_label = if_else(date == max(date), core, NA_character_)) %>% 
+  ungroup()
+gpdf %>% 
+  ggplot(aes(x = date, y = deaths_per_capita*1000, group = county, label = end_label, color = core)) +
+  geom_line(aes(size = linesize, alpha = linesize)) +
+  geom_text_repel(segment.color = NA, nudge_x = 2) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_covid +                                                                                  
+  labs(title = str_glue("COVID Deaths per Capita in { report_state } Counties"),
+       x = NULL,
+       y = "Deaths Per 1,000 Population")
+```
+
+
+
+```{r county_weekly_change_deaths}
+gpdf <- state_county %>% 
+  group_by(county) %>% 
+  mutate(core = if_else(
+           county %nin% top_n_counties(state_county, n=7, wt = deaths_weekly_change, label = county), "", 
+           county 
+           ),
+         linesize = if_else(core == "", 0.5, 1),
+         end_label = if_else(date == max(date), core, NA_character_)) %>% 
+  ungroup()
+gpdf %>% 
+  ggplot(aes(x = date, y = deaths_weekly_change, group = county, label = end_label, color = core)) +
+  geom_line(aes(size = linesize, alpha = linesize)) +
+  geom_text_repel(segment.color = NA, nudge_x = 2) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_covid +
+  labs(title = str_glue("Weekly New COVID Deaths in {report_state} Counties"),
+       x = NULL,
+       y = "New Deaths in Last 7 Days")
+```
+
+
+```{r county_change_per_capita_deaths}
+gpdf <- state_county %>% 
+  group_by(county) %>% 
+  mutate(core = if_else(
+           county %nin% top_n_counties(state_county, n=7, wt = deaths_change_per_capita, label = county), "", 
+           county 
+           ),
+         linesize = if_else(core == "", 0.5, 1),
+         end_label = if_else(date == max(date), core, NA_character_)) %>% 
+  ungroup()
+gpdf %>% 
+  ggplot(aes(x = date, y = deaths_change_per_capita*1000, group = county, label = end_label, color = core)) +
+  geom_line(aes(size = linesize, alpha = linesize)) +
+  geom_text_repel(segment.color = NA, nudge_x = 2) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_covid +
+  labs(title = str_glue("Weekly New COVID Deaths Per Capita in { report_state } Counties"),
+       x = NULL,
+       y = "New Deaths in Last 7 Days per 1,000 Population")
+```
