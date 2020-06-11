@@ -15,6 +15,8 @@ top_n_counties <- function(data, n = 5, wt = cases, label = full_name) {
     filter(date == max(date) & {{ wt }} > 0 ) %>%
     ungroup() %>%
     top_n(n, wt = {{ wt }}) %>%
+    arrange(desc({{ wt }})) %>% 
+    slice(1:n) %>% 
     pull({{ label }})
 }
 
