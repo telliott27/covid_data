@@ -70,7 +70,10 @@ nyt_county_data <- nytcovcounty %>%
       cases < 100 ~ NA_real_,
       percent_weekly_change == Inf ~ NA_real_,
       TRUE ~ percent_weekly_change
-    )
+    ),
+    deaths_per_capita = deaths / population,
+    deaths_weekly_change = deaths - lag(deaths, 7),
+    deaths_change_per_capita = deaths_weekly_change / population
   ) %>% 
   ungroup()
 
