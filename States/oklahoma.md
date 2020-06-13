@@ -1,7 +1,7 @@
 Oklahoma
 ================
 
-**Updated at:** 2020-06-10 17:44:11
+**Updated at:** 2020-06-12 13:59:23
 
 <img src="oklahoma_files/figure-gfm/az_state-1.png" width="768" />
 

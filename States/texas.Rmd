@@ -5,8 +5,6 @@ output: github_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, fig.width = 8, fig.height = 6, fig.retina = 4)
-# get latest data
-remotes::install_github("kjhealy/covdata")
 
 library(tidyverse)
 library(covdata)
@@ -15,25 +13,7 @@ library(paletteer)
 library(prismatic)
 library(here)
 
-
-source(here("add_county_pop.R"))
-
-report_state <- "Texas"
-
-start_date <- floor_date(today(), "month") - months(3)
-end_date <- today() + days(10)
-
-theme_covid <-   list(theme(
-    panel.background = element_blank(),
-    panel.grid.major.y = element_line(color = ghColorSelect("grey-200"))
-  ),
-  scale_color_manual(values = ghColorSelect("grey-400", "blue", "red", "green", "yellow-800", "purple", "orange", "pink")),
-  scale_size_identity(),
-  guides(color = FALSE),
-    scale_x_date(limits = c(start_date, end_date)),
-  scale_alpha_identity())
-
-kable <- partial(knitr::kable, format.args = list(big.mark = ","))
+load(here("data", "covid_data.Rdata"))
 
 updated_at <- now()
 ```
