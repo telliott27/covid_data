@@ -6,5 +6,6 @@ library(here)
 
 source(here("get_data.R"))
 
-rmarkdown::render_site()
 rmarkdown::clean_site()
+rmarkdown::render_site()
+

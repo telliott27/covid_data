@@ -9,6 +9,7 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, fig.width = 8, fig.height =
 remotes::install_github("kjhealy/covdata")
 
 library(tidyverse)
+library(lubridate)
 library(covdata)
 library(ggrepel)
 library(paletteer)
