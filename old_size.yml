@@ -1,0 +1,28 @@
+name: "covid-data"
+output_dir: "docs"
+navbar:
+  title: "COVID Data"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "Arizona"
+      href: arizona.html
+    - text: "California"
+      href: california.html
+    - text: "Michigan"
+      href: michigan.html
+    - text: "New York"
+      href: new_york.html
+    - text: "Oklahoma"
+      href: oklahoma.html
+    - text: "Tennessee"
+      href: tennessee.html
+    - text: "Texas"
+      href: texas.html
+    - text: "West Virginia"
+      href: west_virginia.html
+output:
+  html_document:
+    theme: whisper
+    toc: true
+    toc_float: true
