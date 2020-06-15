@@ -21,3 +21,8 @@ for( state in state_rmd) {
   )
 }
 
+rmarkdown::render(
+  input = here("README.Rmd"),
+  output_format = "github_document",
+  envir = new.env()
+)

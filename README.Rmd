@@ -1,0 +1,25 @@
+---
+title: "COVID Data"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+library(lubridate)
+library(here)
+
+updated_at <- now()
+```
+
+Last updated at: `r updated_at`
+
+```{r, results='asis'}
+states_md <- list.files(path = here("States"), pattern = "*[.]md")
+
+for(state in states_md) {
+  state_name <- str_to_title(str_split(state, pattern = "[.]")[[1]][1])
+  print(str_glue("<a href='States/{ state }'>{ state_name }</a> \n \n"))
+}
+```
+
