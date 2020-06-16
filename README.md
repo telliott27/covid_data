@@ -1,7 +1,7 @@
 COVID Data
 ================
 
-Last updated at: 2020-06-15 12:58:52
+Last updated at: 2020-06-16 16:29:19
 
 <a href='States/alabama.md'>Alabama</a>
 
@@ -13,9 +13,13 @@ Last updated at: 2020-06-15 12:58:52
 
 <a href='States/florida.md'>Florida</a>
 
+<a href='States/georgia.md'>Georgia</a>
+
 <a href='States/michigan.md'>Michigan</a>
 
 <a href='States/new_york.md'>New\_york</a>
+
+<a href='States/north_carolina.md'>North\_carolina</a>
 
 <a href='States/oklahoma.md'>Oklahoma</a>
 

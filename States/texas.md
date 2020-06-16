@@ -1,7 +1,7 @@
 Texas
 ================
 
-**Updated at:** 2020-06-15 12:50:46
+**Updated at:** 2020-06-16 16:28:21
 
 <img src="texas_files/figure-gfm/az_state-1.png" width="768" />
 
