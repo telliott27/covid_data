@@ -1,7 +1,7 @@
 COVID Data
 ================
 
-Last updated at: 2020-06-18 10:00:07
+Last updated at: 2020-06-18 10:16:29
 
 <a href='States/alabama.md'>Alabama</a>
 
@@ -17,9 +17,9 @@ Last updated at: 2020-06-18 10:00:07
 
 <a href='States/michigan.md'>Michigan</a>
 
-<a href='States/new_york.md'>New\_york</a>
+<a href='States/new_york.md'>New York</a>
 
-<a href='States/north_carolina.md'>North\_carolina</a>
+<a href='States/north_carolina.md'>North Carolina</a>
 
 <a href='States/oklahoma.md'>Oklahoma</a>
 
@@ -29,4 +29,4 @@ Last updated at: 2020-06-18 10:00:07
 
 <a href='States/utah.md'>Utah</a>
 
-<a href='States/west_virginia.md'>West\_virginia</a>
+<a href='States/west_virginia.md'>West Virginia</a>
