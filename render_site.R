@@ -11,12 +11,34 @@ rmarkdown::render(
   envir = new.env()
 )
 
-state_rmd <- list.files(path = here("States"), pattern = "*.Rmd")
+the_states <- list(
+  "Alabama" = "alabama",
+  "Arizona" = "arizona",
+  "Arkansas" = "arkansas",
+  "California" = "california",
+  "Florida" = "florida",
+  "Georgia" = "georgia",
+  "Michigan" = "michigan",
+  "New York" = "new_york",
+  "North Carolina" = "north_carolina",
+  "Oklahoma" = "oklahoma",
+  "Tennessee" = "tennessee",
+  "Texas" = "texas",
+  "Utah" = "utah",
+  "Washington" = "washington",
+  "West Virginia" = "west_virginia"
+)
 
-for( state in state_rmd) {
+for( state in seq_along(the_states) ) {
+  state_name <- names(the_states[state])
+  file_name <- the_states[[state]]
   rmarkdown::render(
-    input = here("States", state),
+    input = here("States", "state_report.Rmd"),
+    output_file = here("States", file_name),
     output_format = "github_document",
+    params = list(
+      report_state = state_name
+    ),
     envir = new.env()
   )
   Sys.sleep(1)

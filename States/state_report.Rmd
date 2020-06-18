@@ -1,10 +1,12 @@
 ---
-title: "Texas"
 output: github_document
+params:
+  report_state: Alabama
 ---
 
+
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, warning = FALSE, fig.width = 8, fig.height = 6, fig.retina = 4)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, fig.width = 8, fig.height = 6, fig.retina = 2)
 
 library(tidyverse)
 library(lubridate)
@@ -16,12 +18,17 @@ library(here)
 
 load(here("data", "covid_data.Rdata"))
 
-report_state <- "Texas"
+report_state <- params$report_state
 
 updated_at <- now()
 ```
 
+`r report_state`
+================
+
 **Updated at:** `r updated_at`
+
+# Cases
 
 ```{r az_state}
 nyt_state_df %>% 
@@ -48,6 +55,7 @@ nyt_state_df %>%
        x = NULL,
        y = "New Cases in Previous 7 Days")
 ```
+
 
 ```{r}
 state_county <- nyt_county_data %>% 
@@ -76,7 +84,7 @@ gpdf %>%
   geom_text_repel(segment.color = NA, nudge_x = 2, nudge_y = 0.1) +
   scale_y_continuous(labels = scales::comma) +
   theme_covid +
-  labs(title = str_glue("Cumulative Cases of Coronavirus in California Counties"),
+  labs(title = str_glue("Cumulative Cases of Coronavirus in { report_state } Counties"),
        x = NULL,
        y = "Cumulative Cases")
 ```
@@ -148,8 +156,6 @@ gpdf %>%
        x = NULL,
        y = "New Cases in Last 7 Days per 1,000 Population")
 ```
-
-
 
 # Deaths
 
@@ -225,6 +231,8 @@ gpdf %>%
 
 
 
+
+
 ```{r county_weekly_change_deaths}
 gpdf <- state_county %>% 
   group_by(county) %>% 
@@ -267,4 +275,3 @@ gpdf %>%
        x = NULL,
        y = "New Deaths in Last 7 Days per 1,000 Population")
 ```
-

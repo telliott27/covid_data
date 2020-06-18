@@ -4,7 +4,7 @@ output: github_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, warning = FALSE, fig.width = 8, fig.height = 6, fig.retina = 4)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, fig.width = 8, fig.height = 6, fig.retina = 2)
 # get latest data
 remotes::install_github("kjhealy/covdata")
 
