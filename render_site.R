@@ -19,6 +19,7 @@ for( state in state_rmd) {
     output_format = "github_document",
     envir = new.env()
   )
+  Sys.sleep(1)
 }
 
 rmarkdown::render(

@@ -1,6 +1,7 @@
 library(tidyverse)
 library(lubridate)
 library(here)
+library(zoo)
 
 remotes::install_github("kjhealy/covdata")
 
@@ -89,7 +90,12 @@ nyt_county_data <- nyt_county_data %>%
     ),
     deaths_per_capita = deaths / population,
     deaths_weekly_change = deaths - lag(deaths, 7),
-    deaths_change_per_capita = deaths_weekly_change / population
+    deaths_change_per_capita = deaths_weekly_change / population,
+    
+    daily_new_cases = cases - lag(cases),
+    daily_new_cases = rollmean(daily_new_cases, k = 7, align = "right", fill = NA),
+    max_new_cases = max(daily_new_cases, na.rm=TRUE),
+    p0 = 1 - (daily_new_cases/max_new_cases)
   ) %>% 
   ungroup()
 
@@ -108,7 +114,12 @@ nyt_state_df <- nyt_state_df %>%
     change_per_capita = 1000 * weekly_change / Pop,
     deaths_per_capita = 1000 * deaths / Pop,
     deaths_weekly_change = deaths - lag(deaths, 7),
-    deaths_change_per_capita = 1000 * deaths_weekly_change / Pop
+    deaths_change_per_capita = 1000 * deaths_weekly_change / Pop,
+    
+    daily_new_cases = cases - lag(cases),
+    daily_new_cases = rollmean(daily_new_cases, k = 7, align = "right", fill = NA),
+    max_new_cases = max(daily_new_cases, na.rm=TRUE),
+    p0 = 1 - (daily_new_cases/max_new_cases)
   )
 
 #' ghColors
