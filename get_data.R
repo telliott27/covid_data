@@ -1,3 +1,4 @@
+rm(list = ls())
 library(tidyverse)
 library(lubridate)
 library(here)

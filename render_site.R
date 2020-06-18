@@ -2,7 +2,6 @@ library(tidyverse)
 library(lubridate)
 library(here)
 
-
 source(here("get_data.R"))
 
 rmarkdown::render(
@@ -33,8 +32,8 @@ for( state in seq_along(the_states) ) {
   state_name <- names(the_states[state])
   file_name <- the_states[[state]]
   rmarkdown::render(
-    input = here("States", "state_report.Rmd"),
-    output_file = here("States", file_name),
+    input = str_glue("States/state_report.Rmd"),
+    output_file = file_name,
     output_format = "github_document",
     params = list(
       report_state = state_name

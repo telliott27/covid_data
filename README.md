@@ -1,7 +1,7 @@
 COVID Data
 ================
 
-Last updated at: 2020-06-18 11:13:19
+Last updated at: 2020-06-18 11:58:20
 
 <a href='States/alabama.md'>Alabama</a>
 
