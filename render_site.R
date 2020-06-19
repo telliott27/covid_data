@@ -10,6 +10,12 @@ rmarkdown::render(
   envir = new.env()
 )
 
+rmarkdown::render(
+  input = here("bay_area.Rmd"),
+  output_format = "github_document",
+  envir = new.env()
+)
+
 the_states <- list(
   "Alabama" = "alabama",
   "Arizona" = "arizona",
@@ -41,6 +47,7 @@ for( state in seq_along(the_states) ) {
     envir = new.env()
   )
   Sys.sleep(1)
+  knitr::knit_meta(class=NULL, clean = TRUE)
 }
 
 rmarkdown::render(

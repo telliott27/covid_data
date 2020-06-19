@@ -1,0 +1,318 @@
+---
+output: github_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, fig.width = 8, fig.height = 6, fig.retina = 2)
+
+library(tidyverse)
+library(lubridate)
+library(covdata)
+library(ggrepel)
+library(paletteer)
+library(prismatic)
+library(here)
+
+load(here("data", "covid_data.Rdata"))
+
+
+bay_area_colors <- c(
+  "Alameda" = ghColorSelect("blue"),
+  "Contra Costa" = ghColorSelect("grey-400"),
+  "Marin" = ghColorSelect("red"),
+  "Napa" = ghColorSelect("green-800"),
+  "San Francisco" = ghColorSelect("pink"),
+  "San Mateo" = ghColorSelect("yellow-800"),
+  "Santa Clara" = ghColorSelect("purple"),
+  "Solano" = ghColorSelect("orange"),
+  "Sonoma" = ghColorSelect("green-300")
+)
+
+theme_covid <-   list(
+  theme(
+    panel.background = element_blank(),
+    panel.grid.major.y = element_line(color = ghColorSelect("grey-200"))
+  ),
+  scale_color_manual(values = bay_area_colors),
+  scale_size_identity(),
+  guides(color = FALSE),
+  scale_x_date(limits = c(start_date, end_date)),
+  scale_alpha_identity()
+)
+
+updated_at <- now()
+```
+
+California Bay Area
+================
+
+**Updated at:** `r updated_at`
+
+# Total Cases
+
+```{r cumulative_cases}
+gpdf <- nyt_county_data %>% 
+  filter(county %in% bay_area & state == "California") %>% 
+  group_by(date) %>% 
+  summarize(
+    cases = sum(cases),
+    deaths = sum(deaths),
+    daily_new_cases = sum(daily_new_cases, na.rm=TRUE),
+    daily_new_cases_raw = sum(daily_new_cases_raw, na.rm=TRUE)
+  )
+
+gpdf %>% 
+  ggplot(aes(x = date, y = cases)) +
+  geom_line(size = 1) +
+  theme_covid +
+  scale_y_continuous(labels = scales::comma) +
+  labs(title = "Bay Area Cumulative Cases",
+       y = "Cases",
+       x = NULL)
+```
+
+```{r daily_new_cases}
+gpdf %>% 
+  ggplot(aes(x = date, y = daily_new_cases_raw)) +
+  geom_col(fill = ghColorSelect("blue")) +
+  theme_covid +
+  labs(title = "Bay Area Daily New Cases")
+```
+
+
+
+
+```{r}
+state_county <- nyt_county_data %>% 
+  filter(county %in% bay_area & state == "California") %>% 
+  group_by(county) %>% 
+  mutate(days_since = as.integer(date - min(date))) %>% 
+  ungroup()
+gpdf <- state_county %>% 
+  group_by(county) %>% 
+  mutate(core = county,
+         linesize = if_else(core == "", 0.5, 1),
+         end_label = if_else(date == max(date), core, NA_character_)) %>% 
+  ungroup()
+```
+
+
+
+```{r county_raw_cases}
+gpdf %>% 
+  filter(date >= start_date) %>% 
+  ggplot(aes(x = date, y = cases, group = county, label = end_label, color = core)) +
+  geom_line(aes(size = linesize, alpha = linesize)) +
+  geom_text_repel(segment.color = NA, nudge_x = 2, nudge_y = 0.1) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_covid +
+  labs(title = str_glue("Cumulative Cases of Coronavirus in Bay Area Counties"),
+       x = NULL,
+       y = "Cumulative Cases")
+```
+
+```{r county_per_capita}
+gpdf <- state_county %>% 
+  group_by(county) %>% 
+  mutate(core = county,
+         linesize = if_else(core == "", 0.5, 1),
+         end_label = if_else(date == max(date), core, NA_character_)) %>% 
+  ungroup()
+gpdf %>% 
+  ggplot(aes(x = date, y = cases_per_capita*1000, group = county, label = end_label, color = core)) +
+  geom_line(aes(size = linesize, alpha = linesize)) +
+  geom_text_repel(segment.color = NA, nudge_x = 2) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_covid +
+  labs(title = str_glue("Cases per Capita of Coronavirus in Bay Area Counties"),
+       x = NULL,
+       y = "Cases Per 1,000 Population")
+```
+
+
+
+
+
+```{r county_weekly_change}
+gpdf <- state_county %>% 
+  group_by(county) %>% 
+  mutate(core = county,
+         linesize = if_else(core == "", 0.5, 1),
+         end_label = if_else(date == max(date), core, NA_character_)) %>% 
+  ungroup()
+gpdf %>% 
+  ggplot(aes(x = date, y = daily_new_cases, group = county, label = end_label, color = core)) +
+  geom_line(aes(size = linesize, alpha = linesize)) +
+  geom_text_repel(segment.color = NA, nudge_x = 2) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_covid +
+  labs(title = str_glue("Avg. Daily New Cases of Coronavirus in Bay Area Counties"),
+       caption = "Based on a 7 day moving average",
+       x = NULL,
+       y = "New Casess")
+```
+
+```{r county_weekly_change_raw, fig.height = 8}
+gpdf <- state_county
+gpdf %>% 
+  ggplot(aes(x = date, y = daily_new_cases_raw, fill = county)) +
+  geom_col() +
+  facet_grid(rows = "county", scales = "free_y") +
+  scale_y_continuous(labels = scales::comma) +
+  theme(
+    panel.background = element_blank(),
+    panel.grid.major.y = element_line(color = ghColorSelect("grey-200"))
+  ) +
+  scale_fill_manual(values = bay_area_colors) +
+  scale_x_date(limits = c(start_date, NA)) +
+  guides(fill = FALSE) +
+  theme(legend.position = "none") +
+  labs(title = str_glue("Daily New Cases of Coronavirus in Bay Area Counties"),
+       x = NULL,
+       y = "New Cases")
+```
+
+```{r}
+state_county %>% 
+  filter(county == "San Mateo") %>% 
+  select(date, daily_new_cases_raw)
+```
+
+
+```{r county_change_per_capita}
+gpdf <- state_county %>% 
+  group_by(county) %>% 
+  mutate(core = county,
+         linesize = if_else(core == "", 0.5, 1),
+         end_label = if_else(date == max(date), core, NA_character_)) %>% 
+  ungroup()
+gpdf %>% 
+  ggplot(aes(x = date, y = daily_new_per_capita*10000, group = county, label = end_label, color = core)) +
+  geom_line(aes(size = linesize, alpha = linesize)) +
+  geom_text_repel(segment.color = NA, nudge_x = 2) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_covid +
+  labs(title = str_glue("Daily New Cases Per Capita of Coronavirus in Bay Area Counties"),
+       caption = "Based on 7 day moving average",
+       x = NULL,
+       y = "New Cases per 10,000 Population")
+```
+
+
+
+
+# Deaths
+
+
+```{r az_state_deaths}
+gpdf <- nyt_county_data %>% 
+  filter(county %in% bay_area & state == "California") %>% 
+  group_by(date) %>% 
+  summarize(
+    cases = sum(cases),
+    deaths = sum(deaths),
+    daily_deaths_raw = sum(daily_deaths_raw, na.rm=TRUE)
+  )
+gpdf %>% 
+  ggplot(aes(x = date, y = deaths)) +
+  geom_line(size = 1) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_covid +
+  labs(title = str_glue("Cumulative COVID Deaths in the Bay Area"),
+       x = NULL,
+       y = "Cumulative Deaths")
+```
+
+```{r az_state_weekly_change_deaths}
+gpdf %>% 
+  ggplot(aes(x = date, y = daily_deaths_raw)) +
+  geom_col(fill = ghColorSelect("purple")) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_covid +
+  labs(title = str_glue("Daily New COVID Deaths in the Bay Area"),
+       caption = "Based on a 7 day moving average",
+       x = NULL,
+       y = "Deaths")
+```
+
+
+
+```{r county_raw_deaths}
+gpdf <- state_county %>% 
+  group_by(county) %>% 
+  mutate(core = county,
+         linesize = if_else(core == "", 0.5, 1),
+         end_label = if_else(date == max(date), core, NA_character_)) %>% 
+  ungroup()
+gpdf %>% 
+  filter(date >= start_date) %>% 
+  ggplot(aes(x = date, y = deaths, group = county, label = end_label, color = core)) +
+  geom_line(aes(size = linesize, alpha = linesize)) +
+  geom_text_repel(segment.color = NA, nudge_x = 2, nudge_y = 0.1) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_covid +
+  labs(title = str_glue("Cumulative COVID Deaths in Bay Area Counties"),
+       x = NULL,
+       y = "Cumulative Deaths")
+```
+
+```{r county_per_capita_deaths}
+gpdf <- state_county %>% 
+  group_by(county) %>% 
+  mutate(core = county,
+         linesize = if_else(core == "", 0.5, 1),
+         end_label = if_else(date == max(date), core, NA_character_)) %>% 
+  ungroup()
+gpdf %>% 
+  ggplot(aes(x = date, y = deaths_per_capita*10000, group = county, label = end_label, color = core)) +
+  geom_line(aes(size = linesize, alpha = linesize)) +
+  geom_text_repel(segment.color = NA, nudge_x = 2) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_covid +                                                                                  
+  labs(title = str_glue("COVID Deaths per Capita in Bay Area Counties"),
+       x = NULL,
+       y = "Deaths Per 10,000 Population")
+```
+
+
+
+
+
+```{r county_weekly_change_deaths}
+gpdf <- state_county %>% 
+  group_by(county) %>% 
+  mutate(core = county,
+         linesize = if_else(core == "", 0.5, 1),
+         end_label = if_else(date == max(date), core, NA_character_)) %>% 
+  ungroup()
+gpdf %>% 
+  ggplot(aes(x = date, y = daily_deaths, group = county, label = end_label, color = core)) +
+  geom_line(aes(size = linesize, alpha = linesize)) +
+  geom_text_repel(segment.color = NA, nudge_x = 2) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_covid +
+  labs(title = str_glue("Daily New COVID Deaths in Bay Area Counties"),
+       caption = "Based on a 7 day moving average",
+       x = NULL,
+       y = "New Deaths")
+```
+
+
+```{r county_change_per_capita_deaths}
+gpdf <- state_county %>% 
+  group_by(county) %>% 
+  mutate(core = county,
+         linesize = if_else(core == "", 0.5, 1),
+         end_label = if_else(date == max(date), core, NA_character_)) %>% 
+  ungroup()
+gpdf %>% 
+  ggplot(aes(x = date, y = daily_deaths_per_capita*10000, group = county, label = end_label, color = core)) +
+  geom_line(aes(size = linesize, alpha = linesize)) +
+  geom_text_repel(segment.color = NA, nudge_x = 2) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_covid +
+  labs(title = str_glue("Daily New COVID Deaths Per Capita in Bay Area Counties"),
+       x = NULL,
+       y = "New Deaths per 10,000 Population")
+```

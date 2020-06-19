@@ -1,7 +1,15 @@
 COVID Data
 ================
 
-Last updated at: 2020-06-18 11:58:20
+Last updated at: 2020-06-19 10:19:34
+
+## Custom Reports
+
+<a href="index.ms">US by State</a>
+
+<a href="bay_area.md">California Bay Area</a>
+
+## States
 
 <a href='States/alabama.md'>Alabama</a>
 

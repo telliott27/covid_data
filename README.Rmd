@@ -14,6 +14,14 @@ updated_at <- now()
 
 Last updated at: `r updated_at`
 
+## Custom Reports
+
+<a href="index.ms">US by State</a>
+
+<a href="bay_area.md">California Bay Area</a>
+
+## States
+
 ```{r, results='asis'}
 states_md <- list.files(path = here("States"), pattern = "*[.]md")
 

@@ -60,7 +60,13 @@ nyt_us_total <- nyt_us_total %>%
   arrange(date) %>% 
   mutate(
     weekly_change = cases - lag(cases, 7),
-    deaths_weekly_change = deaths - lag(deaths, 7)
+    deaths_weekly_change = deaths - lag(deaths, 7),
+    
+    daily_new_cases_raw = cases - lag(cases),
+    daily_new_cases = rollmean(daily_new_cases_raw, k = 7, align = "right", fill = NA),
+    
+    daily_deaths_raw = deaths - lag(deaths),
+    daily_deaths = rollmean(daily_deaths_raw, k = 7, align = "right", fill = NA)
   )
   
 
@@ -93,10 +99,15 @@ nyt_county_data <- nyt_county_data %>%
     deaths_weekly_change = deaths - lag(deaths, 7),
     deaths_change_per_capita = deaths_weekly_change / population,
     
-    daily_new_cases = cases - lag(cases),
-    daily_new_cases = rollmean(daily_new_cases, k = 7, align = "right", fill = NA),
+    daily_new_cases_raw = cases - lag(cases),
+    daily_new_cases = rollmean(daily_new_cases_raw, k = 7, align = "right", fill = NA),
     max_new_cases = max(daily_new_cases, na.rm=TRUE),
-    p0 = 1 - (daily_new_cases/max_new_cases)
+    p0 = 1 - (daily_new_cases/max_new_cases),
+    daily_new_per_capita = daily_new_cases / population,
+    
+    daily_deaths_raw = deaths - lag(deaths),
+    daily_deaths = rollmean(daily_deaths_raw, k = 7, align = "right", fill = NA),
+    daily_deaths_per_capita = daily_deaths / population
   ) %>% 
   ungroup()
 
@@ -117,10 +128,15 @@ nyt_state_df <- nyt_state_df %>%
     deaths_weekly_change = deaths - lag(deaths, 7),
     deaths_change_per_capita = 1000 * deaths_weekly_change / Pop,
     
-    daily_new_cases = cases - lag(cases),
-    daily_new_cases = rollmean(daily_new_cases, k = 7, align = "right", fill = NA),
+    daily_new_cases_raw = cases - lag(cases),
+    daily_new_cases = rollmean(daily_new_cases_raw, k = 7, align = "right", fill = NA),
     max_new_cases = max(daily_new_cases, na.rm=TRUE),
-    p0 = 1 - (daily_new_cases/max_new_cases)
+    p0 = 1 - (daily_new_cases/max_new_cases),
+    daily_new_per_capita = daily_new_cases / Pop,
+    
+    daily_deaths_raw = deaths - lag(deaths),
+    daily_deaths = rollmean(daily_deaths_raw, k = 7, align = "right", fill = NA),
+    daily_deaths_per_capita = daily_deaths / Pop
   )
 
 #' ghColors

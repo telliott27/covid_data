@@ -1,7 +1,7 @@
 
 # Alabama
 
-**Updated at:** 2020-06-18 11:53:59
+**Updated at:** 2020-06-19 10:14:30
 
 # Cases
 
@@ -14,6 +14,8 @@
 <img src="alabama_files/figure-gfm/county_per_capita-1.png" width="768" />
 
 <img src="alabama_files/figure-gfm/county_weekly_change-1.png" width="768" />
+
+<img src="alabama_files/figure-gfm/county_weekly_change_raw-1.png" width="768" />
 
 <img src="alabama_files/figure-gfm/county_change_per_capita-1.png" width="768" />
 

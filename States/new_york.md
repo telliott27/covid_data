@@ -1,7 +1,7 @@
 
 # New York
 
-**Updated at:** 2020-06-18 11:55:59
+**Updated at:** 2020-06-19 10:16:42
 
 # Cases
 
@@ -14,6 +14,8 @@
 <img src="new_york_files/figure-gfm/county_per_capita-1.png" width="768" />
 
 <img src="new_york_files/figure-gfm/county_weekly_change-1.png" width="768" />
+
+<img src="new_york_files/figure-gfm/county_weekly_change_raw-1.png" width="768" />
 
 <img src="new_york_files/figure-gfm/county_change_per_capita-1.png" width="768" />
 

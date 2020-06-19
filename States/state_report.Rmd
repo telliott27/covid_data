@@ -43,19 +43,22 @@ nyt_state_df %>%
        y = "Cumulative Cases")
 ```
 
+
+
 ```{r az_state_weekly_change}
 nyt_state_df %>% 
   filter(state == report_state) %>% 
   mutate(days_since = as.integer(date - min(date))) %>% 
-  ggplot(aes(x = date, y = weekly_change)) +
-  geom_line(size = 1) +
+  ggplot(aes(x = date)) +
+  geom_col(aes(y = daily_new_cases_raw), fill = ghColorSelect("blue")) +
+  geom_line(aes(y = daily_new_cases), size = 1, alpha = 1, linetype = "dashed") +
   scale_y_continuous(labels = scales::comma) +
   theme_covid +
-  labs(title = str_glue("Weekly New Cases of Coronavirus in { report_state }"),
+  labs(title = str_glue("Daily New Cases of Coronavirus in { report_state }"),
+       caption = "Line indicates 7 day moving average",
        x = NULL,
-       y = "New Cases in Previous 7 Days")
+       y = "News Cases")
 ```
-
 
 ```{r}
 state_county <- nyt_county_data %>% 
@@ -118,44 +121,69 @@ gpdf %>%
 gpdf <- state_county %>% 
   group_by(county) %>% 
   mutate(core = if_else(
-           county %nin% top_n_counties(state_county, n=7, wt = weekly_change, label = county), "", 
+           county %nin% top_n_counties(state_county, n=7, wt = daily_new_cases, label = county), "", 
            county 
            ),
          linesize = if_else(core == "", 0.5, 1),
          end_label = if_else(date == max(date), core, NA_character_)) %>% 
   ungroup()
 gpdf %>% 
-  ggplot(aes(x = date, y = weekly_change, group = county, label = end_label, color = core)) +
+  ggplot(aes(x = date, y = daily_new_cases, group = county, label = end_label, color = core)) +
   geom_line(aes(size = linesize, alpha = linesize)) +
   geom_text_repel(segment.color = NA, nudge_x = 2) +
   scale_y_continuous(labels = scales::comma) +
   theme_covid +
-  labs(title = str_glue("Weekly New Cases of Coronavirus in {report_state} Counties"),
+  labs(title = str_glue("Avg. Daily New Cases of Coronavirus in {report_state} Counties"),
+       caption = "Based on a 7 day moving average",
        x = NULL,
-       y = "New Cases in Last 7 Days")
+       y = "New Casess")
 ```
 
+```{r county_weekly_change_raw, fig.height = 8}
+gpdf <- state_county %>% 
+  filter(county %in% top_n_counties(state_county, n=7, wt = daily_new_cases_raw, label = county)) %>% 
+  ungroup()
+gpdf %>% 
+  ggplot(aes(x = date, y = daily_new_cases_raw, fill = county)) +
+  geom_col() +
+  facet_grid(rows = "county", scales = "free_y") +
+  scale_y_continuous(labels = scales::comma) +
+  scale_x_date(limits = c(start_date, NA)) +
+  theme(
+    panel.background = element_blank(),
+    panel.grid.major.y = element_line(color = ghColorSelect("grey-200"))
+  ) +
+  scale_fill_manual(values = ghColorSelect("grey-400", "blue", "red", "green", "yellow-800", "purple", "orange", "pink")) +
+  guides(fill = FALSE) +
+  labs(title = str_glue("Daily New Cases of Coronavirus in {report_state} Counties"),
+       x = NULL,
+       y = "New Casess")
+```
 
 ```{r county_change_per_capita}
 gpdf <- state_county %>% 
   group_by(county) %>% 
   mutate(core = if_else(
-           county %nin% top_n_counties(state_county, n=7, wt = change_per_capita, label = county), "", 
+           county %nin% top_n_counties(state_county, n=7, wt = daily_new_per_capita, label = county), "", 
            county 
            ),
          linesize = if_else(core == "", 0.5, 1),
          end_label = if_else(date == max(date), core, NA_character_)) %>% 
   ungroup()
 gpdf %>% 
-  ggplot(aes(x = date, y = change_per_capita*1000, group = county, label = end_label, color = core)) +
+  ggplot(aes(x = date, y = daily_new_per_capita*10000, group = county, label = end_label, color = core)) +
   geom_line(aes(size = linesize, alpha = linesize)) +
   geom_text_repel(segment.color = NA, nudge_x = 2) +
   scale_y_continuous(labels = scales::comma) +
   theme_covid +
-  labs(title = str_glue("Weekly New Cases Per Capita of Coronavirus in { report_state } Counties"),
+  labs(title = str_glue("Daily New Cases Per Capita of Coronavirus in { report_state } Counties"),
+       caption = "Based on 7 day moving average",
        x = NULL,
-       y = "New Cases in Last 7 Days per 1,000 Population")
+       y = "New Cases per 10,000 Population")
 ```
+
+
+
 
 # Deaths
 
@@ -175,13 +203,14 @@ nyt_state_df %>%
 ```{r az_state_weekly_change_deaths}
 nyt_state_df %>% 
   filter(state == report_state) %>% 
-  ggplot(aes(x = date, y = deaths_weekly_change)) +
+  ggplot(aes(x = date, y = daily_deaths)) +
   geom_line(size = 1) +
   scale_y_continuous(labels = scales::comma) +
   theme_covid +
-  labs(title = str_glue("Weekly New COVID Deaths in { report_state }"),
+  labs(title = str_glue("Daily New COVID Deaths in { report_state }"),
+       caption = "Based on a 7 day moving average",
        x = NULL,
-       y = "New Deaths in Previous 7 Days")
+       y = "Deaths")
 ```
 
 
@@ -237,21 +266,22 @@ gpdf %>%
 gpdf <- state_county %>% 
   group_by(county) %>% 
   mutate(core = if_else(
-           county %nin% top_n_counties(state_county, n=7, wt = deaths_weekly_change, label = county), "", 
+           county %nin% top_n_counties(state_county, n=7, wt = daily_deaths, label = county), "", 
            county 
            ),
          linesize = if_else(core == "", 0.5, 1),
          end_label = if_else(date == max(date), core, NA_character_)) %>% 
   ungroup()
 gpdf %>% 
-  ggplot(aes(x = date, y = deaths_weekly_change, group = county, label = end_label, color = core)) +
+  ggplot(aes(x = date, y = daily_deaths, group = county, label = end_label, color = core)) +
   geom_line(aes(size = linesize, alpha = linesize)) +
   geom_text_repel(segment.color = NA, nudge_x = 2) +
   scale_y_continuous(labels = scales::comma) +
   theme_covid +
-  labs(title = str_glue("Weekly New COVID Deaths in {report_state} Counties"),
+  labs(title = str_glue("Daily New COVID Deaths in {report_state} Counties"),
+       caption = "Based on a 7 day moving average",
        x = NULL,
-       y = "New Deaths in Last 7 Days")
+       y = "New Deaths")
 ```
 
 
@@ -259,19 +289,19 @@ gpdf %>%
 gpdf <- state_county %>% 
   group_by(county) %>% 
   mutate(core = if_else(
-           county %nin% top_n_counties(state_county, n=7, wt = deaths_change_per_capita, label = county), "", 
+           county %nin% top_n_counties(state_county, n=7, wt = daily_deaths_per_capita, label = county), "", 
            county 
            ),
          linesize = if_else(core == "", 0.5, 1),
          end_label = if_else(date == max(date), core, NA_character_)) %>% 
   ungroup()
 gpdf %>% 
-  ggplot(aes(x = date, y = deaths_change_per_capita*1000, group = county, label = end_label, color = core)) +
+  ggplot(aes(x = date, y = daily_deaths_per_capita*10000, group = county, label = end_label, color = core)) +
   geom_line(aes(size = linesize, alpha = linesize)) +
   geom_text_repel(segment.color = NA, nudge_x = 2) +
   scale_y_continuous(labels = scales::comma) +
   theme_covid +
-  labs(title = str_glue("Weekly New COVID Deaths Per Capita in { report_state } Counties"),
+  labs(title = str_glue("Daily New COVID Deaths Per Capita in { report_state } Counties"),
        x = NULL,
-       y = "New Deaths in Last 7 Days per 1,000 Population")
+       y = "New Deaths per 10,000 Population")
 ```

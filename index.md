@@ -1,7 +1,7 @@
 United States
 ================
 
-**Updated at:** 2020-06-18 11:53:47
+**Updated at:** 2020-06-19 10:13:39
 
 # U.S. Totals
 
@@ -26,6 +26,8 @@ United States
 <img src="index_files/figure-gfm/state_per_capita-1.png" width="768" />
 
 <img src="index_files/figure-gfm/state_weekly_change-1.png" width="768" />
+
+<img src="index_files/figure-gfm/state_weekly_change_raw-1.png" width="768" />
 
 <img src="index_files/figure-gfm/state_change_per_capita-1.png" width="768" />
 
