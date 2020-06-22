@@ -1,7 +1,7 @@
 ---
 output: github_document
 params:
-  report_state: Alabama
+  report_state: California
 ---
 
 

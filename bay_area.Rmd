@@ -77,7 +77,9 @@ gpdf %>%
   ggplot(aes(x = date, y = daily_new_cases_raw)) +
   geom_col(fill = ghColorSelect("blue")) +
   theme_covid +
-  labs(title = "Bay Area Daily New Cases")
+  labs(title = "Bay Area Daily New Cases",
+       x = NULL,
+       y = "New Cases")
 ```
 
 
@@ -173,11 +175,6 @@ gpdf %>%
        y = "New Cases")
 ```
 
-```{r}
-state_county %>% 
-  filter(county == "San Mateo") %>% 
-  select(date, daily_new_cases_raw)
-```
 
 
 ```{r county_change_per_capita}

@@ -1,7 +1,7 @@
 COVID Data
 ================
 
-Last updated at: 2020-06-22 12:46:16
+Last updated at: 2020-06-22 12:54:46
 
 ## Custom Reports
 
@@ -23,13 +23,19 @@ Last updated at: 2020-06-22 12:46:16
 
 <a href='States/georgia.md'>Georgia</a>
 
+<a href='States/illinois.md'>Illinois</a>
+
 <a href='States/michigan.md'>Michigan</a>
+
+<a href='States/new_jersey.md'>New Jersey</a>
 
 <a href='States/new_york.md'>New York</a>
 
 <a href='States/north_carolina.md'>North Carolina</a>
 
 <a href='States/oklahoma.md'>Oklahoma</a>
+
+<a href='States/south_carolina.md'>South Carolina</a>
 
 <a href='States/tennessee.md'>Tennessee</a>
 
