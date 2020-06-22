@@ -1,7 +1,7 @@
 
 # California Bay Area
 
-**Updated at:** 2020-06-19 10:13:53
+**Updated at:** 2020-06-22 12:41:40
 
 # Total Cases
 
@@ -17,7 +17,7 @@
 
 <img src="bay_area_files/figure-gfm/county_weekly_change_raw-1.png" width="768" />
 
-    ## # A tibble: 109 x 2
+    ## # A tibble: 112 x 2
     ##    date       daily_new_cases_raw
     ##    <date>                   <dbl>
     ##  1 2020-03-02                  NA
@@ -30,7 +30,7 @@
     ##  8 2020-03-09                   8
     ##  9 2020-03-10                   0
     ## 10 2020-03-11                   6
-    ## # … with 99 more rows
+    ## # … with 102 more rows
 
 <img src="bay_area_files/figure-gfm/county_change_per_capita-1.png" width="768" />
 
