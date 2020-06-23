@@ -1,7 +1,7 @@
 
 # California Bay Area
 
-**Updated at:** 2020-06-22 12:50:08
+**Updated at:** 2020-06-23 10:45:06
 
 # Total Cases
 
