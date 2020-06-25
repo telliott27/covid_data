@@ -21,6 +21,7 @@ the_states <- list(
   "Arizona" = "arizona",
   "Arkansas" = "arkansas",
   "California" = "california",
+  "Colorado" = "colorado",
   "Florida" = "florida",
   "Georgia" = "georgia",
   "Illinois" = "illinois",
