@@ -1,7 +1,7 @@
 
 # Arkansas
 
-**Updated at:** 2020-06-23 10:50:54
+**Updated at:** 2020-06-25 10:49:03
 
 # Cases
 

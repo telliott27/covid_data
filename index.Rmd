@@ -52,6 +52,7 @@ nyt_us_total %>%
        y = "New Cases")
 ```
 
+
 ## Deaths
 
 ```{r us_total_deaths}
