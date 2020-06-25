@@ -1,7 +1,7 @@
 COVID Data
 ================
 
-Last updated at: 2020-06-25 10:53:27
+Last updated at: 2020-06-25 11:11:19
 
 ## Custom Reports
 
@@ -18,6 +18,8 @@ Last updated at: 2020-06-25 10:53:27
 <a href='States/arkansas.md'>Arkansas</a>
 
 <a href='States/california.md'>California</a>
+
+<a href='States/colorado.md'>Colorado</a>
 
 <a href='States/florida.md'>Florida</a>
 
