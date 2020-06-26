@@ -18,6 +18,7 @@ rmarkdown::render(
 
 the_states <- list(
   "Alabama" = "alabama",
+  "Alaska" = "alaska",
   "Arizona" = "arizona",
   "Arkansas" = "arkansas",
   "California" = "california",

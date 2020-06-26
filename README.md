@@ -1,7 +1,7 @@
 COVID Data
 ================
 
-Last updated at: 2020-06-25 11:11:19
+Last updated at: 2020-06-26 15:42:10
 
 ## Custom Reports
 
@@ -12,6 +12,8 @@ Last updated at: 2020-06-25 11:11:19
 ## States
 
 <a href='States/alabama.md'>Alabama</a>
+
+<a href='States/alaska.md'>Alaska</a>
 
 <a href='States/arizona.md'>Arizona</a>
 
