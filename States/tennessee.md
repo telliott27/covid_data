@@ -1,7 +1,7 @@
 
 # Tennessee
 
-**Updated at:** 2020-06-26 15:40:16
+**Updated at:** 2020-06-27 12:09:16
 
 # Cases
 

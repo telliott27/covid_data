@@ -4,8 +4,6 @@ library(lubridate)
 library(here)
 library(zoo)
 
-remotes::install_github("kjhealy/covdata")
-
 county_df <- read_csv(here("data", "co-est2019-alldata.csv"))
 
 ## Convenince "Not in" operator

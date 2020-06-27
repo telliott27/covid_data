@@ -1,9 +1,11 @@
 
 # California Bay Area
 
-**Updated at:** 2020-06-26 09:59:10
+**Updated at:** 2020-06-27 12:03:23
 
 # Total Cases
+
+    ## `summarise()` ungrouping output (override with `.groups` argument)
 
 <img src="bay_area_files/figure-gfm/cumulative_cases-1.png" width="768" />
 
@@ -20,6 +22,8 @@
 <img src="bay_area_files/figure-gfm/county_change_per_capita-1.png" width="768" />
 
 # Deaths
+
+    ## `summarise()` ungrouping output (override with `.groups` argument)
 
 <img src="bay_area_files/figure-gfm/az_state_deaths-1.png" width="768" />
 

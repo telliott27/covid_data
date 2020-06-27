@@ -1,7 +1,7 @@
 
 # Texas
 
-**Updated at:** 2020-06-26 15:40:37
+**Updated at:** 2020-06-27 12:09:44
 
 # Cases
 

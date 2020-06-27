@@ -27,6 +27,7 @@ the_states <- list(
   "Georgia" = "georgia",
   "Illinois" = "illinois",
   "Michigan" = "michigan",
+  "Nevada" = "nevada",
   "New Jersey" = "new_jersey",
   "New York" = "new_york",
   "North Carolina" = "north_carolina",

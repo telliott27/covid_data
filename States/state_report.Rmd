@@ -10,7 +10,6 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, fig.width = 8, fig.height =
 
 library(tidyverse)
 library(lubridate)
-library(covdata)
 library(ggrepel)
 library(paletteer)
 library(prismatic)
@@ -62,7 +61,7 @@ nyt_state_df %>%
 
 ```{r}
 state_county <- nyt_county_data %>% 
-  filter(state == report_state) %>% 
+  filter(state == report_state & county != "Unknown") %>% 
   group_by(county) %>% 
   mutate(days_since = as.integer(date - min(date))) %>% 
   ungroup()
