@@ -1,7 +1,7 @@
 
 # Michigan
 
-**Updated at:** 2020-06-29 14:33:40
+**Updated at:** 2020-06-30 14:18:49
 
 # Cases
 

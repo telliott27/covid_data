@@ -1,7 +1,7 @@
 
 # West Virginia
 
-**Updated at:** 2020-06-29 14:37:16
+**Updated at:** 2020-06-30 14:21:51
 
 # Cases
 

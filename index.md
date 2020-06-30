@@ -1,7 +1,7 @@
 United States
 ================
 
-**Updated at:** 2020-06-29 14:27:56
+**Updated at:** 2020-06-30 10:31:33
 
 # U.S. Totals
 
