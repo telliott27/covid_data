@@ -1,7 +1,7 @@
 COVID Data
 ================
 
-Last updated at: 2020-06-30 14:22:03
+Last updated at: 2020-07-01 10:51:46
 
 ## Custom Reports
 
@@ -30,6 +30,8 @@ Last updated at: 2020-06-30 14:22:03
 <a href='States/illinois.md'>Illinois</a>
 
 <a href='States/michigan.md'>Michigan</a>
+
+<a href='States/mississippi.md'>Mississippi</a>
 
 <a href='States/nevada.md'>Nevada</a>
 
