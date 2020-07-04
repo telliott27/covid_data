@@ -1,7 +1,7 @@
 
 # Arizona
 
-**Updated at:** 2020-07-01 10:40:04
+**Updated at:** 2020-07-04 10:14:06
 
 # Cases
 

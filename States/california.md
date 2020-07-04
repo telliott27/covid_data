@@ -1,7 +1,7 @@
 
 # California
 
-**Updated at:** 2020-07-01 10:41:05
+**Updated at:** 2020-07-04 10:14:31
 
 # Cases
 

@@ -4,6 +4,8 @@ library(here)
 
 source(here("get_data.R"))
 
+load(here("data", "covid_data.Rdata"))
+
 rmarkdown::render(
   input = here("index.Rmd"),
   output_format = "github_document",
