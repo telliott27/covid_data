@@ -1,7 +1,7 @@
 COVID Data
 ================
 
-Last updated at: 2020-07-06 09:01:46
+Last updated at: 2020-07-08 09:35:10
 
 ## Custom Reports
 
