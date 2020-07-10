@@ -1,11 +1,11 @@
 COVID Data
 ================
 
-Last updated at: 2020-07-08 09:35:10
+Last updated at: 2020-07-10 15:14:46
 
 ## Custom Reports
 
-<a href="index.ms">US by State</a>
+<a href="index.md">US by State</a>
 
 <a href="bay_area.md">California Bay Area</a>
 
@@ -28,6 +28,8 @@ Last updated at: 2020-07-08 09:35:10
 <a href='States/georgia.md'>Georgia</a>
 
 <a href='States/illinois.md'>Illinois</a>
+
+<a href='States/louisiana.md'>Louisiana</a>
 
 <a href='States/michigan.md'>Michigan</a>
 

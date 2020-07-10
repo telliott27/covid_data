@@ -16,7 +16,7 @@ Last updated at: `r updated_at`
 
 ## Custom Reports
 
-<a href="index.ms">US by State</a>
+<a href="index.md">US by State</a>
 
 <a href="bay_area.md">California Bay Area</a>
 

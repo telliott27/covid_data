@@ -1,7 +1,7 @@
 
 # Florida
 
-**Updated at:** 2020-07-08 09:31:00
+**Updated at:** 2020-07-10 14:55:32
 
 # Cases
 
