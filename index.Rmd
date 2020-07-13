@@ -42,6 +42,7 @@ nyt_us_total %>%
   filter(date >= start_date) %>% 
   ggplot(aes(x = date, y = daily_new_cases_raw)) +
   geom_col(fill = ghColorSelect("blue")) +
+  geom_line(aes(y = daily_new_cases), size = 1, linetype = "dashed") +
   scale_y_continuous(labels = scales::comma) +
   theme_covid +
   labs(title = str_glue("Daily New Cases of Coronavirus"),
@@ -70,6 +71,7 @@ nyt_us_total %>%
   filter(date >= start_date) %>% 
   ggplot(aes(x = date, y = daily_deaths_raw)) +
   geom_col(fill = ghColorSelect("purple")) +
+  geom_line(aes(y = daily_deaths), size = 1, linetype = "dashed") +
   scale_y_continuous(labels = scales::comma) +
   theme_covid +
   labs(title = str_glue("Daily COVID Deaths"),

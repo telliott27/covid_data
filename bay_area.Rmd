@@ -75,6 +75,7 @@ gpdf %>%
 gpdf %>% 
   ggplot(aes(x = date, y = daily_new_cases_raw)) +
   geom_col(fill = ghColorSelect("blue")) +
+  geom_line(aes(y = daily_new_cases), size = 1, linetype = "dashed") +
   theme_covid +
   labs(title = "Bay Area Daily New Cases",
        x = NULL,
@@ -208,7 +209,8 @@ gpdf <- nyt_county_data %>%
   summarize(
     cases = sum(cases),
     deaths = sum(deaths),
-    daily_deaths_raw = sum(daily_deaths_raw, na.rm=TRUE)
+    daily_deaths_raw = sum(daily_deaths_raw, na.rm=TRUE),
+    daily_deaths = sum(daily_deaths, na.rm=TRUE)
   )
 gpdf %>% 
   ggplot(aes(x = date, y = deaths)) +
@@ -224,6 +226,7 @@ gpdf %>%
 gpdf %>% 
   ggplot(aes(x = date, y = daily_deaths_raw)) +
   geom_col(fill = ghColorSelect("purple")) +
+  geom_line(aes(y = daily_deaths), size = 1, linetype = "dashed") +
   scale_y_continuous(labels = scales::comma) +
   theme_covid +
   labs(title = str_glue("Daily New COVID Deaths in the Bay Area"),
