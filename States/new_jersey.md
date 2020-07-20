@@ -1,7 +1,7 @@
 
 # New Jersey
 
-**Updated at:** 2020-07-13 13:54:13
+**Updated at:** 2020-07-20 10:17:16
 
 # Cases
 
