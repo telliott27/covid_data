@@ -1,7 +1,7 @@
 COVID Data
 ================
 
-Last updated at: 2020-07-20 10:25:28
+Last updated at: 2020-08-28 16:41:59
 
 ## Custom Reports
 
@@ -42,6 +42,8 @@ Last updated at: 2020-07-20 10:25:28
 <a href='States/new_york.md'>New York</a>
 
 <a href='States/north_carolina.md'>North Carolina</a>
+
+<a href='States/north_dakota.md'>North Dakota</a>
 
 <a href='States/oklahoma.md'>Oklahoma</a>
 

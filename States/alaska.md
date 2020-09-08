@@ -1,7 +1,7 @@
 
 # Alaska
 
-**Updated at:** 2020-07-20 10:13:47
+**Updated at:** 2020-08-28 16:35:02
 
 # Cases
 

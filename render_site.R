@@ -35,6 +35,7 @@ the_states <- list(
   "New Jersey" = "new_jersey",
   "New York" = "new_york",
   "North Carolina" = "north_carolina",
+  "North Dakota" = "north_dakota",
   "Oklahoma" = "oklahoma",
   "South Carolina" = "south_carolina",
   "Tennessee" = "tennessee",

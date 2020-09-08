@@ -1,7 +1,7 @@
 
 # Georgia
 
-**Updated at:** 2020-07-20 10:15:15
+**Updated at:** 2020-08-28 16:36:33
 
 # Cases
 
