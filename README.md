@@ -1,7 +1,7 @@
 COVID Data
 ================
 
-Last updated at: 2020-08-28 16:41:59
+Last updated at: 2020-09-22 19:17:54
 
 ## Custom Reports
 
@@ -29,6 +29,8 @@ Last updated at: 2020-08-28 16:41:59
 
 <a href='States/illinois.md'>Illinois</a>
 
+<a href='States/iowa.md'>Iowa</a>
+
 <a href='States/louisiana.md'>Louisiana</a>
 
 <a href='States/michigan.md'>Michigan</a>
@@ -49,6 +51,8 @@ Last updated at: 2020-08-28 16:41:59
 
 <a href='States/south_carolina.md'>South Carolina</a>
 
+<a href='States/south_dakota.md'>South Dakota</a>
+
 <a href='States/tennessee.md'>Tennessee</a>
 
 <a href='States/texas.md'>Texas</a>
@@ -58,3 +62,5 @@ Last updated at: 2020-08-28 16:41:59
 <a href='States/washington.md'>Washington</a>
 
 <a href='States/west_virginia.md'>West Virginia</a>
+
+<a href='States/wisconsin.md'>Wisconsin</a>

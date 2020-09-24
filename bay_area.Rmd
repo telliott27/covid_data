@@ -74,7 +74,7 @@ gpdf %>%
 ```{r daily_new_cases}
 gpdf %>% 
   ggplot(aes(x = date, y = daily_new_cases_raw)) +
-  geom_col(fill = ghColorSelect("blue")) +
+  geom_area(fill = ghColorSelect("blue"), alpha = 0.8) +
   geom_line(aes(y = daily_new_cases), size = 1, linetype = "dashed") +
   theme_covid +
   labs(title = "Bay Area Daily New Cases",
@@ -225,7 +225,7 @@ gpdf %>%
 ```{r az_state_weekly_change_deaths}
 gpdf %>% 
   ggplot(aes(x = date, y = daily_deaths_raw)) +
-  geom_col(fill = ghColorSelect("purple")) +
+  geom_area(fill = ghColorSelect("purple"), alpha = 0.8) +
   geom_line(aes(y = daily_deaths), size = 1, linetype = "dashed") +
   scale_y_continuous(labels = scales::comma) +
   theme_covid +

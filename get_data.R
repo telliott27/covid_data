@@ -263,7 +263,7 @@ ghColorSelect<-function(...) {
   }
 }
 
-start_date <- floor_date(today(), "month") - months(3)
+start_date <- ymd("2020-03-01")
 end_date <- today() + days(10)
 
 theme_covid <-   list(theme(

@@ -1,7 +1,7 @@
 
 # Colorado
 
-**Updated at:** 2020-08-28 16:36:04
+**Updated at:** 2020-09-22 19:08:24
 
 # Cases
 

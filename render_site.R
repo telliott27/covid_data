@@ -28,6 +28,7 @@ the_states <- list(
   "Florida" = "florida",
   "Georgia" = "georgia",
   "Illinois" = "illinois",
+  "Iowa" = "iowa",
   "Louisiana" = "louisiana",
   "Michigan" = "michigan",
   "Mississippi" = "mississippi",
@@ -38,11 +39,13 @@ the_states <- list(
   "North Dakota" = "north_dakota",
   "Oklahoma" = "oklahoma",
   "South Carolina" = "south_carolina",
+  "South Dakota" = "south_dakota",
   "Tennessee" = "tennessee",
   "Texas" = "texas",
   "Utah" = "utah",
   "Washington" = "washington",
-  "West Virginia" = "west_virginia"
+  "West Virginia" = "west_virginia",
+  "Wisconsin" = "wisconsin"
 )
 
 for( state in seq_along(the_states) ) {
