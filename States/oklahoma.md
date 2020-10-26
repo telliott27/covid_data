@@ -1,7 +1,7 @@
 
 # Oklahoma
 
-**Updated at:** 2020-09-22 19:13:44
+**Updated at:** 2020-10-25 17:22:09
 
 # Cases
 

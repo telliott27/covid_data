@@ -14,7 +14,8 @@ county_df <- read_csv(here("data", "co-est2019-alldata.csv"))
 top_n_counties <- function(data, n = 5, wt = cases, label = full_name) {
   data %>%
     group_by(full_name) %>%
-    filter(date == max(date) & {{ wt }} > 0 ) %>%
+    filter({{ wt }} > 0 ) %>%
+    filter(date == max(date)) %>% 
     ungroup() %>%
     top_n(n, wt = {{ wt }}) %>%
     arrange(desc({{ wt }})) %>% 

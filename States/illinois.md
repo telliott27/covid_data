@@ -1,7 +1,7 @@
 
 # Illinois
 
-**Updated at:** 2020-09-22 19:09:55
+**Updated at:** 2020-10-25 17:18:03
 
 # Cases
 

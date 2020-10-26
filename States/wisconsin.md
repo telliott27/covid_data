@@ -1,7 +1,7 @@
 
 # Wisconsin
 
-**Updated at:** 2020-09-22 19:17:27
+**Updated at:** 2020-10-25 17:26:10
 
 # Cases
 

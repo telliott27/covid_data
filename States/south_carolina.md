@@ -1,7 +1,7 @@
 
 # South Carolina
 
-**Updated at:** 2020-09-22 19:14:08
+**Updated at:** 2020-10-25 17:22:36
 
 # Cases
 
