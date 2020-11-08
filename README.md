@@ -1,7 +1,7 @@
 COVID Data
 ================
 
-Last updated at: 2020-10-25 17:26:34
+Last updated at: 2020-11-08 14:46:21
 
 ## Custom Reports
 
@@ -23,9 +23,17 @@ Last updated at: 2020-10-25 17:26:34
 
 <a href='States/colorado.md'>Colorado</a>
 
+<a href='States/connecticut.md'>Connecticut</a>
+
+<a href='States/delaware.md'>Delaware</a>
+
 <a href='States/florida.md'>Florida</a>
 
 <a href='States/georgia.md'>Georgia</a>
+
+<a href='States/hawaii.md'>Hawaii</a>
+
+<a href='States/idaho.md'>Idaho</a>
 
 <a href='States/illinois.md'>Illinois</a>
 
@@ -36,6 +44,10 @@ Last updated at: 2020-10-25 17:26:34
 <a href='States/michigan.md'>Michigan</a>
 
 <a href='States/mississippi.md'>Mississippi</a>
+
+<a href='States/montana.md'>Montana</a>
+
+<a href='States/nebraska.md'>Nebraska</a>
 
 <a href='States/nevada.md'>Nevada</a>
 

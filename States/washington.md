@@ -1,7 +1,7 @@
 
 # Washington
 
-**Updated at:** 2020-10-25 17:25:33
+**Updated at:** 2020-11-08 14:45:19
 
 # Cases
 
