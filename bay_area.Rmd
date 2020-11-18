@@ -122,14 +122,14 @@ gpdf <- state_county %>%
          end_label = if_else(date == max(date), core, NA_character_)) %>% 
   ungroup()
 gpdf %>% 
-  ggplot(aes(x = date, y = cases_per_capita*1000, group = county, label = end_label, color = core)) +
+  ggplot(aes(x = date, y = cases_per_capita, group = county, label = end_label, color = core)) +
   geom_line(aes(size = linesize, alpha = linesize)) +
   geom_text_repel(segment.color = NA, nudge_x = 2) +
   scale_y_continuous(labels = scales::comma) +
   theme_covid +
   labs(title = str_glue("Cases per Capita of Coronavirus in Bay Area Counties"),
        x = NULL,
-       y = "Cases Per 1,000 Population")
+       y = "Cases Per 100,000 Population")
 ```
 
 
@@ -185,7 +185,7 @@ gpdf <- state_county %>%
          end_label = if_else(date == max(date), core, NA_character_)) %>% 
   ungroup()
 gpdf %>% 
-  ggplot(aes(x = date, y = daily_new_per_capita*10000, group = county, label = end_label, color = core)) +
+  ggplot(aes(x = date, y = daily_new_per_capita, group = county, label = end_label, color = core)) +
   geom_line(aes(size = linesize, alpha = linesize)) +
   geom_text_repel(segment.color = NA, nudge_x = 2) +
   scale_y_continuous(labels = scales::comma) +
@@ -193,7 +193,7 @@ gpdf %>%
   labs(title = str_glue("Daily New Cases Per Capita of Coronavirus in Bay Area Counties"),
        caption = "Based on 7 day moving average",
        x = NULL,
-       y = "New Cases per 10,000 Population")
+       y = "New Cases per 100,000 Population")
 ```
 
 
@@ -264,14 +264,14 @@ gpdf <- state_county %>%
          end_label = if_else(date == max(date), core, NA_character_)) %>% 
   ungroup()
 gpdf %>% 
-  ggplot(aes(x = date, y = deaths_per_capita*10000, group = county, label = end_label, color = core)) +
+  ggplot(aes(x = date, y = deaths_per_capita, group = county, label = end_label, color = core)) +
   geom_line(aes(size = linesize, alpha = linesize)) +
   geom_text_repel(segment.color = NA, nudge_x = 2) +
   scale_y_continuous(labels = scales::comma) +
   theme_covid +                                                                                  
   labs(title = str_glue("COVID Deaths per Capita in Bay Area Counties"),
        x = NULL,
-       y = "Deaths Per 10,000 Population")
+       y = "Deaths Per 100,000 Population")
 ```
 
 
@@ -306,12 +306,12 @@ gpdf <- state_county %>%
          end_label = if_else(date == max(date), core, NA_character_)) %>% 
   ungroup()
 gpdf %>% 
-  ggplot(aes(x = date, y = daily_deaths_per_capita*10000, group = county, label = end_label, color = core)) +
+  ggplot(aes(x = date, y = daily_deaths_per_capita, group = county, label = end_label, color = core)) +
   geom_line(aes(size = linesize, alpha = linesize)) +
   geom_text_repel(segment.color = NA, nudge_x = 2) +
   scale_y_continuous(labels = scales::comma) +
   theme_covid +
   labs(title = str_glue("Daily New COVID Deaths Per Capita in Bay Area Counties"),
        x = NULL,
-       y = "New Deaths per 10,000 Population")
+       y = "New Deaths per 100,000 Population")
 ```

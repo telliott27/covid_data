@@ -84,29 +84,29 @@ nyt_county_data <- nyt_county_data %>%
   group_by(full_name) %>% 
   arrange(date) %>% 
   mutate(
-    cases_per_capita = cases / population,
-    deaths_per_capita = deaths / population,
+    cases_per_capita = 100000 * cases / population,
+    deaths_per_capita = 100000 * deaths / population,
     weekly_change = cases - lag(cases, 7),
-    change_per_capita = weekly_change / population,
+    change_per_capita = 100000 * weekly_change / population,
     percent_weekly_change = weekly_change / lag(cases, 7),
     percent_weekly_change = case_when(
       cases < 100 ~ NA_real_,
       percent_weekly_change == Inf ~ NA_real_,
       TRUE ~ percent_weekly_change
     ),
-    deaths_per_capita = deaths / population,
+    deaths_per_capita = 100000 * deaths / population,
     deaths_weekly_change = deaths - lag(deaths, 7),
-    deaths_change_per_capita = deaths_weekly_change / population,
+    deaths_change_per_capita = 100000 * deaths_weekly_change / population,
     
     daily_new_cases_raw = cases - lag(cases),
     daily_new_cases = rollmean(daily_new_cases_raw, k = 7, align = "right", fill = NA),
     max_new_cases = max(daily_new_cases, na.rm=TRUE),
     p0 = 1 - (daily_new_cases/max_new_cases),
-    daily_new_per_capita = daily_new_cases / population,
+    daily_new_per_capita = 100000 * daily_new_cases / population,
     
     daily_deaths_raw = deaths - lag(deaths),
     daily_deaths = rollmean(daily_deaths_raw, k = 7, align = "right", fill = NA),
-    daily_deaths_per_capita = daily_deaths / population
+    daily_deaths_per_capita = 100000 * daily_deaths / population
   ) %>% 
   ungroup()
 
@@ -117,25 +117,25 @@ nyt_state_df <- read_csv("https://raw.githubusercontent.com/nytimes/covid-19-dat
 
 nyt_state_df <- nyt_state_df %>% 
   left_join(state_pops, by = c("state" = "State")) %>% 
-  mutate(cases_per_capita = 1000 * cases / Pop) %>% 
+  mutate(cases_per_capita = 100000 * cases / Pop) %>% 
   group_by(state) %>% 
   arrange(date) %>% 
   mutate(
     weekly_change = cases - lag(cases, 7),
-    change_per_capita = 1000 * weekly_change / Pop,
-    deaths_per_capita = 1000 * deaths / Pop,
+    change_per_capita = 100000 * weekly_change / Pop,
+    deaths_per_capita = 100000 * deaths / Pop,
     deaths_weekly_change = deaths - lag(deaths, 7),
-    deaths_change_per_capita = 1000 * deaths_weekly_change / Pop,
+    deaths_change_per_capita = 100000 * deaths_weekly_change / Pop,
     
     daily_new_cases_raw = cases - lag(cases),
     daily_new_cases = rollmean(daily_new_cases_raw, k = 7, align = "right", fill = NA),
     max_new_cases = max(daily_new_cases, na.rm=TRUE),
     p0 = 1 - (daily_new_cases/max_new_cases),
-    daily_new_per_capita = daily_new_cases / Pop,
+    daily_new_per_capita = 100000 * daily_new_cases / Pop,
     
     daily_deaths_raw = deaths - lag(deaths),
     daily_deaths = rollmean(daily_deaths_raw, k = 7, align = "right", fill = NA),
-    daily_deaths_per_capita = daily_deaths / Pop
+    daily_deaths_per_capita = 100000 * daily_deaths / Pop
   )
 
 #' ghColors

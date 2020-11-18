@@ -125,7 +125,7 @@ gpdf %>%
   theme_covid +
   labs(title = str_glue("Cases per Capita of Coronavirus by State"),
        x = NULL,
-       y = "Cases Per 1,000 Population")
+       y = "Cases Per 100,000 Population")
 ```
 
 
@@ -185,14 +185,14 @@ gpdf <- nyt_state_df %>%
          end_label = if_else(date == max(date), core, NA_character_)) %>% 
   ungroup()
 gpdf %>% 
-  ggplot(aes(x = date, y = daily_new_per_capita*10000, group = state, label = end_label, color = core)) +
+  ggplot(aes(x = date, y = daily_new_per_capita, group = state, label = end_label, color = core)) +
   geom_line(aes(size = linesize, alpha = linesize)) +
   geom_text_repel(segment.color = NA, nudge_x = 2) +
   scale_y_continuous(labels = scales::comma) +
   theme_covid +
   labs(title = str_glue("Daily New Cases Per Capita of Coronavirus by State"),
        x = NULL,
-       y = "New Cases per 10,000 Population")
+       y = "New Cases per 100,000 Population")
 ```
 
 ## Deaths
@@ -239,7 +239,7 @@ gpdf %>%
   theme_covid +
   labs(title = str_glue("COVID-19 Deaths per Capita by State"),
        x = NULL,
-       y = "Deaths Per 1,000 Population")
+       y = "Deaths Per 100,000 Population")
 ```
 
 
@@ -288,5 +288,5 @@ gpdf %>%
   labs(title = str_glue("Avg. Daily New COVID Deaths Per Capita by State"),
        caption = "Based on 7 day moving average",
        x = NULL,
-       y = "New Deaths in Last 7 Days per 1,000 Population")
+       y = "New Deaths in Last 7 Days per 100,000 Population")
 ```
