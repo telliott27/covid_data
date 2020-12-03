@@ -1,7 +1,7 @@
 
 # Hawaii
 
-**Updated at:** 2020-11-28 11:16:36
+**Updated at:** 2020-12-02 13:59:22
 
 # Cases
 
