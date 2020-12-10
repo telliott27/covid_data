@@ -1,7 +1,7 @@
 
 # Idaho
 
-**Updated at:** 2020-12-02 13:59:30
+**Updated at:** 2020-12-09 14:24:35
 
 # Cases
 
