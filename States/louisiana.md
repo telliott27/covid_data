@@ -1,7 +1,7 @@
 
 # Louisiana
 
-**Updated at:** 2020-12-09 14:25:42
+**Updated at:** 2020-12-17 14:04:50
 
 # Cases
 

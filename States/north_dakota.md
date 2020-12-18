@@ -1,7 +1,7 @@
 
 # North Dakota
 
-**Updated at:** 2020-12-09 14:28:33
+**Updated at:** 2020-12-17 14:07:47
 
 # Cases
 
