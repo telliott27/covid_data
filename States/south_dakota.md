@@ -1,7 +1,7 @@
 
 # South Dakota
 
-**Updated at:** 2020-12-17 14:08:43
+**Updated at:** 2021-01-02 00:08:01
 
 # Cases
 
