@@ -1,7 +1,7 @@
 
 # South Carolina
 
-**Updated at:** 2021-01-08 10:32:43
+**Updated at:** 2021-02-01 10:55:18
 
 # Cases
 

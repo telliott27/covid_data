@@ -1,7 +1,7 @@
 
 # Nebraska
 
-**Updated at:** 2021-01-08 10:30:32
+**Updated at:** 2021-02-01 10:53:06
 
 # Cases
 

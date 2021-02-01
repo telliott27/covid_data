@@ -1,7 +1,7 @@
 
 # Mississippi
 
-**Updated at:** 2021-01-08 10:29:52
+**Updated at:** 2021-02-01 10:52:25
 
 # Cases
 

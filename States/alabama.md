@@ -1,7 +1,7 @@
 
 # Alabama
 
-**Updated at:** 2021-01-08 10:24:52
+**Updated at:** 2021-02-01 10:47:14
 
 # Cases
 
