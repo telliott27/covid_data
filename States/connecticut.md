@@ -1,7 +1,7 @@
 
 # Connecticut
 
-**Updated at:** 2021-02-01 10:48:57
+**Updated at:** 2021-02-08 13:27:56
 
 # Cases
 

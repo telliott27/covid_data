@@ -1,7 +1,7 @@
 
 # North Carolina
 
-**Updated at:** 2021-02-01 10:54:12
+**Updated at:** 2021-02-08 13:32:48
 
 # Cases
 

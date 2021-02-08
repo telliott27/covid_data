@@ -1,7 +1,7 @@
 
 # Nevada
 
-**Updated at:** 2021-02-01 10:53:30
+**Updated at:** 2021-02-08 13:32:10
 
 # Cases
 
