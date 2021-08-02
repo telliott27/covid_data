@@ -223,7 +223,17 @@ gpdf %>%
 ```
 
 ```{r az_state_weekly_change_deaths}
-gpdf %>% 
+nyt_county_daily %>% 
+  filter(county %in% bay_area & state == "California") %>% 
+  group_by(date) %>% 
+  summarize(
+    daily_deaths_raw = sum(deaths),
+    daily_deaths = sum(deaths_avg),
+    .groups = "drop"
+  ) %>% 
+  mutate(
+    daily_deaths_raw = ifelse(daily_deaths_raw < 0, NA, daily_deaths_raw)
+  ) %>% 
   ggplot(aes(x = date, y = daily_deaths_raw)) +
   geom_area(fill = ghColorSelect("purple"), alpha = 0.8) +
   geom_line(aes(y = daily_deaths), size = 1, linetype = "dashed") +

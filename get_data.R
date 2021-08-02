@@ -54,6 +54,8 @@ county_pop <- county_df %>%
     population = POPESTIMATE2019)
 
 nyt_us_total <- read_csv("https://raw.githubusercontent.com/nytimes/covid-19-data/master/us.csv")
+nyt_us_daily <- read_csv("https://raw.githubusercontent.com/nytimes/covid-19-data/master/rolling-averages/us.csv")
+nyt_state_daily <- read_csv("https://raw.githubusercontent.com/nytimes/covid-19-data/master/rolling-averages/us-states.csv")
 
 nyt_us_total <- nyt_us_total %>% 
   arrange(date) %>% 
@@ -70,6 +72,7 @@ nyt_us_total <- nyt_us_total %>%
   
 
 nyt_county_data <- read_csv("https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv")
+nyt_county_daily <- read_csv("https://raw.githubusercontent.com/nytimes/covid-19-data/master/rolling-averages/us-counties.csv")
 
 nyt_county_data <- nyt_county_data %>% 
   left_join(county_pop, by = "fips") %>% 
