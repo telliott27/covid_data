@@ -1,7 +1,7 @@
 
 # Delaware
 
-**Updated at:** 2021-02-08 13:28:06
+**Updated at:** 2021-09-10 15:42:03
 
 # Cases
 
